@@ -83,7 +83,36 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
-  }
+  },
+  {
+    path: '/wx/index',
+    component: () => import('@/views/wx/index/index.vue'),
+    name: 'IndependentPage',
+    meta: { title: '车辆信息首页', icon: 'example' },
+    hidden: true,
+  },
+  {
+    path: '/wx/carinfo',
+    component: () => import('@/views/wx/carinfo/index.vue'),
+    name: 'CarInfoPage',
+    meta: { title: '上传车辆信息', icon: 'example' },
+    hidden: true,
+  },
+  {
+    path: '/wx/ocr',
+    component: () => import('@/views/wx/ocr/index.vue'),
+    name: 'OcrPage',
+    meta: { title: '车辆信息识别', icon: 'example' },
+    hidden: true,
+  },
+  {
+    path: '/wx/pay',
+    component: () => import('@/views/wx/pay/index.vue'),
+    name: 'PayPage',
+    meta: { title: '支付', icon: 'example' },
+    hidden: true,
+  },
+ 
 ]
 
 // 动态路由，基于用户权限动态去加载
