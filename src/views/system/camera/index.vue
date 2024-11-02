@@ -46,14 +46,7 @@
             </div>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
-          <el-form-item label="相机类型" prop="captureType">
-            <div class="custom-style">
-              <el-segmented v-model="queryParams.captureType"
-                :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
-            </div>
-          </el-form-item>
-        </el-col>
+
         <!-- <el-col :span="4">
           <el-form-item label="创建时间" prop="createdDate">
             <el-date-picker clearable v-model="queryParams.createdDate" type="date" value-format="YYYY-MM-DD"
@@ -68,11 +61,25 @@
           </el-form-item>
         </el-col> -->
 
-        <el-col :span="4">
+        <el-col :span="5">
           <el-form-item label="相机名" prop="cameraName">
-            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="right">
-              <el-input v-model="queryParams.cameraName" placeholder="请输入相机名" clearable @keyup.enter="handleQuery" />
+            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="right" popper-class="fade">
+              <el-input v-model="queryParams.cameraName" placeholder="请输入相机名" clearable @keyup.enter="handleQuery">
+                <template #prefix>
+                  <el-icon class="el-input__icon">
+                    <search />
+                  </el-icon>
+                </template>
+              </el-input>
             </el-tooltip>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="相机类型" prop="captureType">
+            <div class="custom-style">
+              <el-segmented v-model="queryParams.captureType"
+                :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+            </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -112,20 +119,8 @@
           <dict-tag :options="cam_type" :value="scope.row.captureType" />
         </template>
       </el-table-column>
-      <!-- <el-table-column label="相机品牌" align="center" prop="cameraBrand">
-        <template #default="scope">
-          <dict-tag :options="camera_brand" :value="scope.row.cameraBrand"/>
-        </template>
-</el-table-column>
-<el-table-column label="相机型号" align="center" prop="cameraModel" /> -->
       <el-table-column label="相机序列号" align="center" prop="cameraSn" />
       <el-table-column label="违规抓拍相机序列号" align="center" prop="violationCamSn" />
-      <!-- <el-table-column label="屏幕品牌" align="center" prop="screenBrand">
-        <template #default="scope">
-          <dict-tag :options="screen_brand" :value="scope.row.screenBrand"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="屏幕型号" align="center" prop="screenModel" /> -->
       <el-table-column label="屏幕序列号" align="center" prop="screenSn" />
       <el-table-column label="出入口编号" align="center" prop="entranceNo">
         <template #default="scope">
@@ -133,10 +128,6 @@
         </template>
       </el-table-column>
       <el-table-column label="道闸编号" align="center" prop="turnNo" />
-      <!-- <el-table-column label="IP地址" align="center" prop="ip" />
-      <el-table-column label="端口号" align="center" prop="port" /> -->
-      <!-- <el-table-column label="用户名" align="center" prop="username" />
-      <el-table-column label="密码" align="center" prop="password" /> -->
       <el-table-column label="通道号" align="center" prop="channels" />
       <el-table-column label="出入口标识" align="center" prop="entranceFlag">
         <template #default="scope">
@@ -166,7 +157,7 @@
       <el-table-column label="视频播放路径" align="center" prop="vedioSrc" show-overflow-tooltip />
       <el-table-column label="视频回放路径" align="center" prop="vedioReplay" show-overflow-tooltip />
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['system:camera:edit']">修改</el-button>
@@ -184,15 +175,13 @@
       <el-form ref="cameraRef" :model="form" :rules="rules" label-width="90" label-position="left">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="企业ID" prop="companyId">
-              <el-input v-model="form.companyId" placeholder="请输入企业ID" />
+            <el-form-item label="企业名称" prop="companyId">
+              <el-select v-model="form.companyId" placeholder="请选择企业" clearable filterable>
+                <el-option v-for="item in enterpriseIds" :key="item.companyId" :label="item.companyName"
+                  :value="item.companyId" />
+              </el-select>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="企业编码" prop="identifier">
-              <el-input v-model="form.identifier" placeholder="请输入企业编码" />
-            </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item label="相机名称" prop="cameraName">
               <el-input v-model="form.cameraName" placeholder="请输入相机名称" />
@@ -229,10 +218,10 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="道闸编号" prop="turnNo">
-              <el-input v-model="form.turnNo" placeholder="出入口编号 + 道闸顺序编号,如 A01" />
+              <el-input v-model="form.turnNo" placeholder="道闸顺序编号,如01,02(必须是两位数字)" />
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="出入口编号" prop="entranceNo" style="width: 100%; margin-bottom: 20px;">
               <div class="custom-style">
                 <el-segmented v-model="form.entranceNo"
@@ -240,27 +229,27 @@
               </div>
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="相机经度" prop="longitude">
               <el-input v-model="form.longitude" placeholder="请输入相机经度" />
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="相机纬度" prop="latitude">
               <el-input v-model="form.latitude" placeholder="请输入相机纬度" />
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="IP地址" prop="ip">
               <el-input v-model="form.ip" placeholder="请输入IP地址" />
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="端口号" prop="port">
               <el-input v-model="form.port" placeholder="请输入端口号" />
             </el-form-item>
           </el-col>
-          <el-col :span="7">
+          <el-col :span="8">
             <el-form-item label="通道号" prop="channels">
               <el-input v-model="form.channels" placeholder="请输入通道号" />
             </el-form-item>
@@ -272,7 +261,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="密码" prop="password">
-              <el-input v-model="form.password" placeholder="请输入密码" />
+              <el-input v-model="form.password" placeholder="请输入密码" show-password />
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -314,6 +303,7 @@
 
 <script setup name="Camera">
 import { listCamera, getCamera, delCamera, addCamera, updateCamera } from "@/api/system/camera";
+import { selectIds } from "@/api/system/info";
 
 const { proxy } = getCurrentInstance();
 const { screen_brand, gate_type, entrance_no, camera_brand, tunnel_type, cam_type, certified } = proxy.useDict('screen_brand', 'gate_type', 'entrance_no', 'camera_brand', 'tunnel_type', 'cam_type', 'certified');
@@ -327,6 +317,9 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+
+const enterpriseIds = ref([]);
+const selectedIds = ref('');
 
 const data = reactive({
   form: {},
@@ -360,11 +353,79 @@ const data = reactive({
   },
   rules: {
     companyId: [
-      { required: true, message: "企业ID不能为空", trigger: "blur" }
+      { required: true, message: '企业名称不能为空', trigger: 'change' }
     ],
-    // identifier: [
-    //   { required: true, message: "企业编码不能为空", trigger: "blur" }
-    // ],
+    cameraName: [
+      { required: true, message: '相机名称不能为空', trigger: 'blur' }
+    ],
+    cameraBrand: [
+      { required: true, message: '相机品牌不能为空', trigger: 'change' }
+    ],
+    screenBrand: [
+      { required: true, message: '屏幕品牌不能为空', trigger: 'change' }
+    ],
+    cameraSn: [
+      { required: true, message: '相机序列号不能为空', trigger: 'blur' }
+    ],
+    screenSn: [
+      { required: true, message: '屏幕序列号不能为空', trigger: 'blur' }
+    ],
+    violationCamSn: [
+      { required: true, message: '违规抓拍相机序列号不能为空', trigger: 'blur' }
+    ],
+    turnNo: [
+      { required: true, message: '道闸编号不能为空', trigger: 'blur' }
+    ],
+    entranceNo: [
+      { required: true, message: '出入口编号不能为空', trigger: 'change' }
+    ],
+    longitude: [
+      { required: true, message: '相机经度不能为空', trigger: 'blur' },
+      {
+        validator: (rule, value, callback) => {
+          if (!value || isNaN(value) || value < -180 || value > 180) {
+            callback(new Error('相机经度必须在-180到180之间'));
+          } else {
+            callback();
+          }
+        }, trigger: 'blur'
+      }
+    ],
+    latitude: [
+      { required: true, message: '相机纬度不能为空', trigger: 'blur' },
+      {
+        validator: (rule, value, callback) => {
+          if (!value || isNaN(value) || value < -90 || value > 90) {
+            callback(new Error('相机纬度必须在-90到90之间'));
+          } else {
+            callback();
+          }
+        }, trigger: 'blur'
+      }
+    ],
+    ip: [
+      { required: true, message: 'IP地址不能为空', trigger: 'blur' },
+      { pattern: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/, message: '请输入合法的IP地址', trigger: 'blur' }
+    ],
+    port: [
+      { required: true, message: '端口号不能为空', trigger: 'blur' },
+      { pattern: /^\d{1,5}$/, message: '请输入合法的端口号', trigger: 'blur' }
+    ],
+    channels: [
+      { required: true, message: '通道号不能为空', trigger: 'blur' }
+    ],
+    username: [
+      { required: true, message: '用户名不能为空', trigger: 'blur' }
+    ],
+    password: [
+      { required: true, message: '密码不能为空', trigger: 'blur' }
+    ],
+    captureType: [
+      { required: true, message: '相机类型不能为空', trigger: 'change' }
+    ],
+    gateType: [
+      { required: true, message: '道闸类型不能为空', trigger: 'change' }
+    ],
   }
 });
 
@@ -378,6 +439,7 @@ function getList() {
     total.value = response.total;
     loading.value = false;
   });
+  getEnterpriseList();
 }
 
 // 取消按钮
@@ -477,6 +539,7 @@ function submitForm() {
       }
     }
   });
+
 }
 
 /** 删除按钮操作 */
@@ -497,6 +560,16 @@ function handleExport() {
   }, `camera_${new Date().getTime()}.xlsx`)
 }
 
+async function getEnterpriseList() {
+  try {
+    const response = await selectIds();
+    enterpriseIds.value = response.rows;
+    console.log(enterpriseIds.value);
+  } catch (error) {
+    console.log("获取企业列表失败", error);
+  }
+}
+
 getList();
 </script>
 <style scoped>
@@ -504,5 +577,15 @@ getList();
   --el-segmented-item-selected-color: #F2F6FC;
   --el-segmented-item-selected-bg-color: #409EFF;
   --el-border-radius-base: 12px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: transform 0.3s var(--el-transition-function-fast-bezier);
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

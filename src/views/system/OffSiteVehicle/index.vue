@@ -1,69 +1,37 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="90px">
-      <el-form-item label="公司id" prop="companyId">
-        <el-input v-model="queryParams.companyId" placeholder="请输入公司id" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="车牌号" prop="plateNumber">
-        <el-input v-model="queryParams.plateNumber" placeholder="请输入车牌号" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="VIN" prop="vin">
-        <el-input v-model="queryParams.vin" placeholder="请输入VIN" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="车辆类型" prop="vehicleType">
-        <el-select v-model="queryParams.vehicleType" placeholder="请选择车辆类型" clearable>
-          <el-option v-for="dict in vehicle_type" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="排放阶段" prop="emissionStage">
-        <el-select v-model="queryParams.emissionStage" placeholder="请选择排放阶段" clearable>
-          <el-option v-for="dict in emission_standard" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="环保等级编码" prop="environmentalRatingCode">
-        <el-input v-model="queryParams.environmentalRatingCode" placeholder="请输入环保等级编码" clearable
-          @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="品牌型号" prop="brandModel">
-        <el-input v-model="queryParams.brandModel" placeholder="请输入品牌型号" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="车牌颜色" prop="plateColor">
-        <el-select v-model="queryParams.plateColor" placeholder="请选择车牌颜色" clearable>
-          <el-option v-for="dict in plate_color" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="使用性质" prop="usageProperty">
-        <el-input v-model="queryParams.usageProperty" placeholder="请输入使用性质" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="发动机号" prop="engineNumber">
-        <el-input v-model="queryParams.engineNumber" placeholder="请输入发动机号" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="来访事由" prop="inReason">
-        <el-input v-model="queryParams.inReason" placeholder="请输入来访事由" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="车辆所属人" prop="ownerName">
-        <el-input v-model="queryParams.ownerName" placeholder="请输入车辆所属人" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="住址" prop="address">
-        <el-input v-model="queryParams.address" placeholder="请输入住址" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="核定载人数" prop="loadingCapacity">
-        <el-input v-model="queryParams.loadingCapacity" placeholder="请输入核定载人数" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="总质量 (KG)" prop="totalWeight">
-        <el-input v-model="queryParams.totalWeight" placeholder="请输入总质量 (KG)" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="燃油类型" prop="fuelType">
-        <el-select v-model="queryParams.fuelType" placeholder="请选择燃油类型" clearable>
-          <el-option v-for="dict in fuel_type" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-        <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryRef" label-width="70px" :inline="true" v-show="showSearch"
+      label-position="left">
+      <el-row :gutter="10">
+        <el-col :span="5">
+          <el-form-item label="车牌号" prop="plateNumber">
+            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="right" popper-class="fade">
+              <el-input v-model="queryParams.plateNumber" placeholder="请输入车牌号" clearable @keyup.enter="handleQuery" />
+            </el-tooltip>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="车牌颜色" prop="plateColor">
+            <el-select v-model="queryParams.plateColor" placeholder="请选择车牌颜色" style="width: 180px;" clearable>
+              <el-option v-for="dict in plate_color" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="燃油类型" prop="fuelType">
+            <el-select v-model="queryParams.fuelType" placeholder="请选择燃油类型" style="width: 180px;" clearable>
+              <el-option v-for="dict in fuel_type" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
-
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="Plus" @click="handleAdd"
@@ -88,42 +56,49 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="自增主键" align="center" prop="id" /> -->
       <!-- <el-table-column label="公司id" align="center" prop="companyId" /> -->
-      <el-table-column label="车牌号" align="center" prop="plateNumber" />
-      <el-table-column label="VIN" align="center" prop="vin" />
-      <el-table-column label="车辆类型" align="center" prop="vehicleType">
+      <el-table-column label="车牌号" align="center" prop="plateNumber" width="100" />
+      <el-table-column label="VIN" align="center" prop="vin" :show-overflow-tooltip="true" />
+      <el-table-column label="车辆类型" align="center" prop="vehicleType" width="100">
         <template #default="scope">
           <dict-tag :options="vehicle_type" :value="scope.row.vehicleType" />
         </template>
       </el-table-column>
-      <el-table-column label="排放阶段" align="center" prop="emissionStage">
+      <el-table-column label="车辆种类" align="center" prop="carType" width="100">
+        <template #default="scope">
+          <dict-tag :options="car_type" :value="scope.row.carType" />
+        </template>
+      </el-table-column>
+      <el-table-column label="排放阶段" align="center" prop="emissionStage" width="100">
         <template #default="scope">
           <dict-tag :options="emission_standard" :value="scope.row.emissionStage" />
         </template>
       </el-table-column>
-      <el-table-column label="环保等级编码" align="center" prop="environmentalRatingCode" />
-      <el-table-column label="品牌型号" align="center" prop="brandModel" />
-      <el-table-column label="车牌颜色" align="center" prop="plateColor">
+      <el-table-column label="环保等级编码" align="center" prop="environmentalRatingCode" :show-overflow-tooltip="true" />
+      <el-table-column label="品牌型号" align="center" prop="brandModel" width="100" />
+      <el-table-column label="车牌颜色" align="center" prop="plateColor" width="100">
         <template #default="scope">
           <dict-tag :options="plate_color" :value="scope.row.plateColor" />
         </template>
       </el-table-column>
-      <el-table-column label="使用性质" align="center" prop="usageProperty">
+      <el-table-column label="使用性质" align="center" prop="usageProperty" width="100">
         <template #default="scope">
           <dict-tag :options="usage_property" :value="scope.row.usageProperty" />
         </template>
       </el-table-column>
-      <el-table-column label="发动机号" align="center" prop="engineNumber" />
-      <el-table-column label="来访事由" align="center" prop="inReason" />
-      <el-table-column label="车辆所属人" align="center" prop="ownerName" />
-      <el-table-column label="住址" align="center" prop="address" />
-      <el-table-column label="核定载人数" align="center" prop="loadingCapacity" />
-      <el-table-column label="总质量 (KG)" align="center" prop="totalWeight" />
-      <el-table-column label="燃油类型" align="center" prop="fuelType">
+      <el-table-column label="发动机号" align="center" prop="engineNumber" width="100" />
+      <el-table-column label="核定载人数" align="center" prop="loadingCapacity" width="100" />
+      <el-table-column label="总质量 (KG)" align="center" prop="totalWeight" width="100" />
+      <el-table-column label="燃油类型" align="center" prop="fuelType" width="100">
         <template #default="scope">
           <dict-tag :options="fuel_type" :value="scope.row.fuelType" />
         </template>
       </el-table-column>
-      <el-table-column label="场外车辆状态" align="center" prop="vehicleStatus" />
+      <el-table-column label="认证状态" align="center" prop="vehicleStatus" width="100">
+        <template #default="scope">
+          <dict-tag :options="certified" :value="scope.row.vehicleStatus" />
+        </template>
+      </el-table-column>
+      <el-table-column label="平台信息" align="center" prop="msg" width="150" :show-overflow-tooltip="true" />
       <!-- <el-table-column label="随车清单状态" align="center" prop="fileSyncStatus" /> -->
       <el-table-column label="行驶证图片" align="center" prop="drivingImage" width="100">
         <template #default="scope">
@@ -140,113 +115,169 @@
           <image-preview :src="scope.row.accompanyingDocumentsImage" :width="50" :height="50" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="车辆所属人" align="center" prop="ownerName" width="100" />
+      <!-- <el-table-column label="住址" align="center" prop="address" />
+      <el-table-column label="来访事由" align="center" prop="inReason" width="100" /> -->
+      <el-table-column label="操作" align="center" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['system:OffSiteVehicle:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+          <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)"
             v-hasPermi="['system:OffSiteVehicle:remove']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改场外车辆信息对话框 -->
-    <el-dialog :title="title" v-model="open" width="35%" append-to-body>
-      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="120px">
-        <el-form-item label="公司id" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入公司id" />
-        </el-form-item>
-        <el-form-item label="车牌号" prop="plateNumber">
-          <el-input v-model="form.plateNumber" placeholder="请输入车牌号" />
-        </el-form-item>
-        <el-form-item label="VIN" prop="vin">
-          <el-input v-model="form.vin" placeholder="请输入VIN" />
-        </el-form-item>
-        <el-form-item label="车辆类型" prop="vehicleType" filterable>
-          <el-select v-model="form.vehicleType" placeholder="请选择车辆类型">
-            <el-option v-for="dict in vehicle_type" :key="dict.value" :label="dict.label"
-              :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="排放阶段" prop="emissionStage">
-          <el-select v-model="form.emissionStage" placeholder="请选择排放阶段">
-            <el-option v-for="dict in emission_standard" :key="dict.value" :label="dict.label"
-              :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="环保等级编码" prop="environmentalRatingCode">
-          <el-input v-model="form.environmentalRatingCode" placeholder="请输入环保等级编码" />
-        </el-form-item>
-        <el-form-item label="品牌型号" prop="brandModel">
-          <el-input v-model="form.brandModel" placeholder="请输入品牌型号" />
-        </el-form-item>
-        <el-form-item label="注册日期" prop="registrationDate">
-          <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD"
-            placeholder="请选择注册日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="发证日期" prop="certDate">
-          <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD" placeholder="请选择发证日期">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="车牌颜色" prop="plateColor">
-          <el-select v-model="form.plateColor" placeholder="请选择车牌颜色">
-            <el-option v-for="dict in plate_color" :key="dict.value" :label="dict.label"
-              :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="使用性质" prop="usageProperty">
-          <el-select v-model="form.usageProperty" placeholder="请选择车牌颜色">
-            <el-option v-for="dict in usage_property" :key="dict.value" :label="dict.label"
-              :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="发动机号" prop="engineNumber">
-          <el-input v-model="form.engineNumber" placeholder="请输入发动机号" />
-        </el-form-item>
-        <el-form-item label="来访事由" prop="inReason">
-          <el-input v-model="form.inReason" placeholder="请输入来访事由" />
-        </el-form-item>
-        <el-form-item label="车辆所属人" prop="ownerName">
-          <el-input v-model="form.ownerName" placeholder="请输入车辆所属人" />
-        </el-form-item>
-        <el-form-item label="住址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入住址" />
-        </el-form-item>
-        <el-form-item label="核定载人数" prop="loadingCapacity">
-          <el-input v-model="form.loadingCapacity" placeholder="请输入核定载人数" />
-        </el-form-item>
-        <el-form-item label="总质量 (KG)" prop="totalWeight">
-          <el-input v-model="form.totalWeight" placeholder="请输入总质量 (KG)" />
-        </el-form-item>
-        <el-form-item label="车队名称" prop="fleetName">
-          <el-input v-model="form.fleetName" placeholder="请输入车队名称" />
-        </el-form-item>
-        <el-form-item label="燃油类型" prop="fuelType">
-          <el-select v-model="form.fuelType" placeholder="请选择燃油类型">
-            <el-option v-for="dict in fuel_type" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <!-- <el-form-item label="OBD" prop="hasObd">
-          <el-input v-model="form.hasObd" placeholder="请输入OBD" />
-        </el-form-item> -->
-        <el-form-item label="OBD" prop="fuelType">
-          <el-select v-model="form.hasObd" placeholder="请选择是否加装OBD">
-            <el-option v-for="dict in has_obd" :key="dict.value" :label="dict.label" :value="dict.value"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="行驶证图片" prop="drivingImage">
-          <image-upload v-model="form.drivingImage" />
-        </el-form-item>
-        <el-form-item label="车辆图片" prop="chassisImage">
-          <image-upload v-model="form.chassisImage" />
-        </el-form-item>
-        <el-form-item label="随车清单" prop="accompanyingDocumentsImage">
-          <image-upload v-model="form.accompanyingDocumentsImage" />
-        </el-form-item>
+    <el-dialog :title="title" v-model="open" width="52%" append-to-body>
+      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="100px" label-position="left">
+        <el-row :gutter="20">
+          <el-col :span="7">
+            <el-form-item label="企业名称" prop="companyId">
+              <el-select v-model="form.companyId" placeholder="请选择企业" clearable filterable>
+                <el-option v-for="item in enterpriseIds" :key="item.companyId" :label="item.companyName"
+                  :value="item.companyId" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="车牌号" prop="plateNumber">
+              <el-input v-model="form.plateNumber" placeholder="请输入车牌号" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="车辆所属人" prop="ownerName">
+              <el-input v-model="form.ownerName" placeholder="请输入车辆所属人" @input="onOwnerNameChange" clearable />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="14">
+            <el-form-item label="VIN" prop="vin">
+              <el-input v-model="form.vin" placeholder="请输入VIN" style="width: 270px" autosize show-word-limit
+                maxlength="17" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="车辆类型" prop="vehicleType">
+              <el-select v-model="form.vehicleType" placeholder="请选择车辆类型" filterable>
+                <el-option v-for="dict in vehicle_type" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="车辆种类" prop="carType">
+              <el-select v-model="form.carType" placeholder="请选择车辆种类" filterable>
+                <el-option v-for="dict in car_type" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="排放阶段" prop="emissionStage">
+              <el-select v-model="form.emissionStage" placeholder="请选择排放阶段">
+                <el-option v-for="dict in emission_standard" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="7">
+            <el-form-item label="环保等级编码" prop="environmentalRatingCode">
+              <el-input v-model="form.environmentalRatingCode" placeholder="请输入环保等级编码" />
+            </el-form-item>
+          </el-col> -->
+          <el-col :span="7">
+            <el-form-item label="品牌型号" prop="brandModel">
+              <el-input v-model="form.brandModel" placeholder="请输入品牌型号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="发动机号" prop="engineNumber">
+              <el-input v-model="form.engineNumber" placeholder="请输入发动机号" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="注册日期" prop="registrationDate">
+              <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD"
+                placeholder="请选择注册日期" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="发证日期" prop="certDate">
+              <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD"
+                placeholder="请选择发证日期" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="车牌颜色" prop="plateColor">
+              <el-select v-model="form.plateColor" placeholder="请选择车牌颜色">
+                <el-option v-for="dict in plate_color" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="使用性质" prop="usageProperty">
+              <el-select v-model="form.usageProperty" placeholder="请选择使用性质">
+                <el-option v-for="dict in usage_property" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <!-- <el-col :span="7">
+            <el-form-item label="来访事由" prop="inReason">
+              <el-input v-model="form.inReason" placeholder="请输入来访事由" />
+            </el-form-item>
+          </el-col> -->
+
+          <el-col :span="7">
+            <el-form-item label="核定载人数" prop="loadingCapacity">
+              <el-input v-model="form.loadingCapacity" placeholder="请输入核定载人数" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="核载质量" prop="totalWeight">
+              <el-input v-model="form.totalWeight" placeholder="请输入核载质量" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="车队名称" prop="fleetName">
+              <el-input v-model="form.fleetName" @input="onFleetNameInputChange" placeholder="请输入车队名称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="燃油类型" prop="fuelType">
+              <el-select v-model="form.fuelType" placeholder="请选择燃油类型">
+                <el-option v-for="dict in fuel_type" :key="dict.value" :label="dict.label"
+                  :value="dict.value"></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="行驶证图片" prop="drivingImage">
+              <image-upload v-model="form.drivingImage" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="7">
+            <el-form-item label="车辆图片" prop="chassisImage">
+              <image-upload v-model="form.chassisImage" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="7">
+            <el-form-item label="随车清单" prop="accompanyingDocumentsImage">
+              <image-upload v-model="form.accompanyingDocumentsImage" />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -260,9 +291,10 @@
 
 <script setup name="OffSiteVehicle">
 import { listOffSiteVehicle, getOffSiteVehicle, delOffSiteVehicle, addOffSiteVehicle, updateOffSiteVehicle } from "@/api/system/OffSiteVehicle";
+import { selectIds } from "@/api/system/info";
 
 const { proxy } = getCurrentInstance();
-const { plate_color, emission_standard, fuel_type, vehicle_type, usage_property ,has_obd} = proxy.useDict('plate_color', 'emission_standard', 'fuel_type', 'vehicle_type', 'usage_property','has_obd');
+const { plate_color, emission_standard, fuel_type, vehicle_type, usage_property, has_obd, car_type, certified } = proxy.useDict('certified', 'car_type', 'plate_color', 'emission_standard', 'fuel_type', 'vehicle_type', 'usage_property', 'has_obd');
 
 const OffSiteVehicleList = ref([]);
 const open = ref(false);
@@ -273,6 +305,9 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const enterpriseIds = ref([]);
+
+const isFleetNameChanged = ref(false);
 
 const data = reactive({
   form: {},
@@ -283,6 +318,7 @@ const data = reactive({
     plateNumber: null,
     vin: null,
     vehicleType: null,
+    carType: null,
     emissionStage: null,
     environmentalRatingCode: null,
     brandModel: null,
@@ -296,6 +332,7 @@ const data = reactive({
     totalWeight: null,
     fuelType: null,
     vehicleStatus: null,
+    msg: null,
     fileSyncStatus: null,
     drivingImage: null,
     chassisImage: null,
@@ -312,6 +349,7 @@ const data = reactive({
       { len: 17, message: 'VIN必须是17位字符', trigger: 'blur' }
     ],
     vehicleType: [{ required: true, message: '车辆类型不能为空', trigger: 'blur' }],
+    carType: [{ required: true, message: '车辆类型不能为空', trigger: 'blur' }],
     emissionStage: [{ required: true, message: '排放标准不能为空', trigger: 'blur' }],
     brandModel: [{ required: true, message: '品牌型号不能为空', trigger: 'blur' }],
     registrationDate: [{ required: true, message: '注册日期不能为空', trigger: 'blur' }],
@@ -322,7 +360,6 @@ const data = reactive({
     loadingCapacity: [{ required: true, message: '核定载人数不能为空', trigger: 'blur' }],
     totalWeight: [{ required: true, message: '总质量 (KG)不能为空', trigger: 'blur' }],
     fuelType: [{ required: true, message: '燃油类型不能为空', trigger: 'blur' }],
-    hasObd: [{ required: true, message: 'OBD不能为空', trigger: 'blur' }],
     ownerPhone: [{ required: true, message: '联系电话不能为空', trigger: 'blur' }],
     fleetName: [{ required: true, message: '车队名称不能为空', trigger: 'blur' }],
     drivingImage: [{ required: true, message: '行驶证图片不能为空', trigger: 'change' }],
@@ -341,6 +378,13 @@ function getList() {
     total.value = response.total;
     loading.value = false;
   });
+  getEnterpriseList();
+}
+
+function onOwnerNameChange(newVal) {
+  if (!isFleetNameChanged.value) {
+    form.value.fleetName = newVal;
+  }
 }
 
 // 取消按钮
@@ -357,6 +401,7 @@ function reset() {
     plateNumber: null,
     vin: null,
     vehicleType: null,
+    carType: null,
     emissionStage: null,
     environmentalRatingCode: null,
     brandModel: null,
@@ -373,6 +418,7 @@ function reset() {
     fleetName: null,
     fuelType: null,
     vehicleStatus: null,
+    msg: null,
     fileSyncStatus: null,
     hasObd: null,
     startTime: null,
@@ -425,7 +471,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["OffSiteVehicleRef"].validate(valid => {
     if (valid) {
-      
+
       if (form.value.id != null) {
         updateOffSiteVehicle(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
@@ -462,5 +508,16 @@ function handleExport() {
   }, `OffSiteVehicle_${new Date().getTime()}.xlsx`)
 }
 
+async function getEnterpriseList() {
+  try {
+    const response = await selectIds();
+    enterpriseIds.value = response.rows;
+    console.log(enterpriseIds.value);
+  } catch (error) {
+    console.log("获取企业列表失败", error);
+  }
+}
+
+getEnterpriseList();
 getList();
 </script>

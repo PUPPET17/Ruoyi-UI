@@ -1,79 +1,63 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="企业名称" prop="companyName">
-        <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="行政区划" prop="region">
-        <el-input v-model="queryParams.region" placeholder="请输入行政区划" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="企业id" prop="companyId">
-        <el-input v-model="queryParams.companyId" placeholder="请输入企业id" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="创建时间" prop="createDate">
-        <el-date-picker clearable v-model="queryParams.createDate" type="date" value-format="YYYY-MM-DD"
-          placeholder="请选择创建时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="企业编码" prop="identifier">
-        <el-input v-model="queryParams.identifier" placeholder="请输入企业编码" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="联网状态" prop="isOnline">
-        <el-select v-model="queryParams.isOnline" placeholder="请选择联网状态" clearable>
-          <el-option v-for="dict in is_online" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="企业地址" prop="address">
-        <el-input v-model="queryParams.address" placeholder="请输入企业地址" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="企业评级" prop="level">
-        <el-input v-model="queryParams.level" placeholder="请输入企业评级" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="法人代表" prop="legalRpst">
-        <el-input v-model="queryParams.legalRpst" placeholder="请输入法人代表" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="ocr收费标准" prop="ocrFeeStandard">
-        <el-input v-model="queryParams.ocrFeeStandard" placeholder="请输入ocr收费标准" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="服务费" prop="serviceFee">
-        <el-input v-model="queryParams.serviceFee" placeholder="请输入服务费" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="服务失效时间" prop="expireTime">
-        <el-date-picker clearable v-model="queryParams.expireTime" type="date" value-format="YYYY-MM-DD"
-          placeholder="请选择服务失效时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="自动开闸" prop="isAutoOpen">
-        <el-select v-model="queryParams.isAutoOpen" placeholder="请选择自动开闸" clearable>
-          <el-option v-for="dict in is_auto_open" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="录入车辆" prop="isRegis">
-        <el-select v-model="queryParams.isRegis" placeholder="请选择录入车辆" clearable>
-          <el-option v-for="dict in is_regis" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="企业分类" prop="classifi">
-        <el-input v-model="queryParams.classifi" placeholder="请输入企业分类" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="禁行排放等级" prop="emissionState">
-        <el-select v-model="queryParams.emissionState" placeholder="请选择禁行排放等级" clearable>
-          <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="接口平台" prop="apiStrategy">
-        <el-select v-model="queryParams.apiStrategy" placeholder="请选择接口平台" clearable>
-          <el-option v-for="dict in api_strategy" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <!-- <el-form-item label="绑定的账户Id" prop="userId">
-        <el-input v-model="queryParams.userId" placeholder="请输入绑定的账户Id" clearable @keyup.enter="handleQuery" />
-      </el-form-item> -->
-      <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-        <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="auto"
+      label-position="left">
+      <el-row>
+        <el-col :span="4">
+          <el-form-item label="企业名称" prop="companyName">
+            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="bottom" popper-class="fade">
+              <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" clearable @keyup.enter="handleQuery" />
+            </el-tooltip>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="4">
+          <el-form-item label="企业评级" prop="level">
+            <el-input v-model="queryParams.level" placeholder="请输入企业评级" clearable @keyup.enter="handleQuery" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="4">
+          <el-form-item label="禁行排放等级" prop="emissionState">
+            <el-select v-model="queryParams.emissionState" placeholder="请选择禁行排放等级" style="width: 180px;" clearable>
+              <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label" :value="dict.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="10" />
+        <!-- <el-col :span="8">
+          <el-form-item label="创建时间" prop="createDate">
+            <el-date-picker clearable v-model="queryParams.createDate" type="date" value-format="YYYY-MM-DD"
+              placeholder="请选择创建时间" />
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="8">
+          <el-form-item label="服务失效时间" prop="expireTime">
+            <el-date-picker clearable v-model="queryParams.expireTime" type="date" value-format="YYYY-MM-DD"
+              placeholder="请选择服务失效时间" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" /> -->
+        <el-col :span="4">
+          <el-form-item label="联网状态" prop="isOnline" style="width: 100%; margin-bottom: 20px;">
+            <div class="custom-style">
+              <el-segmented v-model="queryParams.isOnline"
+                :options="is_online.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+            </div>
+          </el-form-item>
+        </el-col>
+
+        <el-col :span="18">
+          <el-form-item>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
+
 
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
@@ -140,11 +124,11 @@
           <dict-tag :options="api_strategy" :value="scope.row.apiStrategy" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['system:info:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+          <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)"
             v-hasPermi="['system:info:remove']">删除</el-button>
         </template>
       </el-table-column>
@@ -162,9 +146,9 @@
         <el-form-item label="行政区划" prop="region">
           <el-input v-model="form.region" placeholder="请输入行政区划" />
         </el-form-item>
-        <el-form-item label="企业id" prop="companyId">
+        <!-- <el-form-item label="企业id" prop="companyId">
           <el-input v-model="form.companyId" placeholder="请输入企业id" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="创建时间" prop="createDate">
           <el-date-picker clearable v-model="form.createDate" type="date" value-format="YYYY-MM-DD"
             placeholder="请选择创建时间">
@@ -411,3 +395,20 @@ function handleExport() {
 
 getList();
 </script>
+<style scoped>
+.custom-style .el-segmented {
+  --el-segmented-item-selected-color: #F2F6FC;
+  --el-segmented-item-selected-bg-color: #409EFF;
+  --el-border-radius-base: 12px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: transform 0.3s var(--el-transition-function-fast-bezier);
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

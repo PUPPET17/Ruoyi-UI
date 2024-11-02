@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px" label-position="left">
       <el-form-item label="企业名称" prop="companyName">
         <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" clearable @keyup.enter="handleQuery" />
       </el-form-item>
@@ -142,11 +142,11 @@
           <image-preview :src="scope.row.accompanyingDocumentsImage" :width="50" :height="50" />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['system:onSiteVehicle:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
+          <el-button link type="danger" icon="Delete" @click="handleDelete(scope.row)"
             v-hasPermi="['system:onSiteVehicle:remove']">删除</el-button>
         </template>
       </el-table-column>

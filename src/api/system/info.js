@@ -42,3 +42,13 @@ export function delInfo(id) {
     method: 'delete'
   })
 }
+
+export function selectIds(){
+  const res = request({
+    url: '/system/info/ids',
+    method: 'get'
+  })
+  console.log("ehhdjuiahduhs")
+  console.log("11111111111"+res)
+  return res
+}
