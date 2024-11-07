@@ -154,6 +154,7 @@
           <span>{{ parseTime(scope.row.updatedDate, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="接口平台信息" align="center" prop="message" show-overflow-tooltip />
       <el-table-column label="视频播放路径" align="center" prop="vedioSrc" show-overflow-tooltip />
       <el-table-column label="视频回放路径" align="center" prop="vedioReplay" show-overflow-tooltip />
 
@@ -222,6 +223,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
+            <!-- A,B,C 选项 -->
             <el-form-item label="出入口编号" prop="entranceNo" style="width: 100%; margin-bottom: 20px;">
               <div class="custom-style">
                 <el-segmented v-model="form.entranceNo"
@@ -349,6 +351,7 @@ const data = reactive({
     vedioSrc: null,
     vedioReplay: null,
     cameraName: null,
+    message: null,
     violationCamSn: null
   },
   rules: {

@@ -56,8 +56,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="自增主键" align="center" prop="id" /> -->
       <!-- <el-table-column label="公司id" align="center" prop="companyId" /> -->
+      <el-table-column label="企业名称" align="center" show-overflow-tooltip>
+        <template #default="scope">
+          {{ getCompanyName(scope.row.companyId) }}
+        </template>
+      </el-table-column>
       <el-table-column label="车牌号" align="center" prop="plateNumber" width="100" />
-      <el-table-column label="VIN" align="center" prop="vin" :show-overflow-tooltip="true" />
+      <el-table-column label="VIN" align="center" prop="vin" show-overflow-tooltip />
       <el-table-column label="车辆类型" align="center" prop="vehicleType" width="100">
         <template #default="scope">
           <dict-tag :options="vehicle_type" :value="scope.row.vehicleType" />
@@ -116,8 +121,8 @@
         </template>
       </el-table-column>
       <el-table-column label="车辆所属人" align="center" prop="ownerName" width="100" />
-      <!-- <el-table-column label="住址" align="center" prop="address" />
-      <el-table-column label="来访事由" align="center" prop="inReason" width="100" /> -->
+      <!-- <el-table-column label="住址" align="center" prop="address" />-->
+      <el-table-column label="来访事由" align="center" prop="inReason" width="100" />
       <el-table-column label="操作" align="center" fixed="right">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
@@ -150,8 +155,8 @@
           </el-col>
 
           <el-col :span="7">
-            <el-form-item label="车辆所属人" prop="ownerName">
-              <el-input v-model="form.ownerName" placeholder="请输入车辆所属人" @input="onOwnerNameChange" clearable />
+            <el-form-item label="发动机号" prop="engineNumber">
+              <el-input v-model="form.engineNumber" placeholder="请输入发动机号" />
             </el-form-item>
           </el-col>
 
@@ -197,8 +202,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="7">
-            <el-form-item label="发动机号" prop="engineNumber">
-              <el-input v-model="form.engineNumber" placeholder="请输入发动机号" />
+            <el-form-item label="车辆所属人" prop="ownerName">
+              <el-input v-model="form.ownerName" placeholder="请输入车辆所属人" @input="onOwnerNameChange" clearable />
+            </el-form-item>
+          </el-col>
+          <el-col :span="14">
+            <el-form-item label="车辆所属人住址" prop="address" label-width="120">
+              <el-input v-model="form.address" placeholder="请输入车辆所属人住址 (三门峡接口必填) " clearable />
             </el-form-item>
           </el-col>
           <el-col :span="7">
@@ -231,11 +241,11 @@
             </el-form-item>
           </el-col>
 
-          <!-- <el-col :span="7">
+          <el-col :span="7">
             <el-form-item label="来访事由" prop="inReason">
               <el-input v-model="form.inReason" placeholder="请输入来访事由" />
             </el-form-item>
-          </el-col> -->
+          </el-col>
 
           <el-col :span="7">
             <el-form-item label="核定载人数" prop="loadingCapacity">
@@ -516,6 +526,11 @@ async function getEnterpriseList() {
   } catch (error) {
     console.log("获取企业列表失败", error);
   }
+}
+
+const getCompanyName = (companyId) => {
+  const company = enterpriseIds.value.find(item => item.companyId === companyId)
+  return company ? company.companyName : companyId
 }
 
 getEnterpriseList();
