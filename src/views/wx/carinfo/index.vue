@@ -2,18 +2,17 @@
   <div class="app-container">
     <div class="form-container">
       <!-- 添加或修改场外车辆信息对话框 -->
-      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="100px" label-position="left">
+      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="100px" label-position="right" size="large">
         <el-row :gutter="20">
           <!-- <el-form-item label="企业名称" prop="companyId">
     <el-select v-model="form.companyId" placeholder="请选择企业" clearable filterable>
       <el-option v-for="item in enterpriseIds" :key="item.companyId" :label="item.companyName" :value="item.companyId" />
     </el-select>
   </el-form-item> -->
-          
+
           <el-col :span="24">
             <el-form-item label="车牌号" prop="plateNumber">
               <plate-input v-model="form.plateNumber"></plate-input>
-              <el-input v-model="form.plateNumber" placeholder="请输入车牌号" show-word-limit maxlength="7" />
             </el-form-item>
           </el-col>
 
@@ -76,21 +75,21 @@
           </el-col>
 
           <el-col :span="24">
-            <el-form-item label="车辆所属人住址" prop="address" label-width="120">
+            <el-form-item label="住址" prop="address">
               <el-input v-model="form.address" placeholder="请输入车辆所属人住址 (三门峡接口必填)" clearable />
             </el-form-item>
           </el-col>
 
           <el-col :span="24">
             <el-form-item label="注册日期" prop="registrationDate">
-              <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD"
+              <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD" :editable=false
                 placeholder="请选择注册日期" />
             </el-form-item>
           </el-col>
 
           <el-col :span="24">
             <el-form-item label="发证日期" prop="certDate">
-              <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD"
+              <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD" :editable=false 
                 placeholder="请选择发证日期" />
             </el-form-item>
           </el-col>
@@ -139,7 +138,7 @@
 
           <el-col :span="24">
             <el-form-item label="燃油类型" prop="fuelType">
-              <el-select v-model="form.fuelType" placeholder="请选择燃油类型">
+              <el-select v-model="form.fuelType" placeholder="请选择燃油类型" size="large">
                 <el-option v-for="dict in fuel_type" :key="dict.value" :label="dict.label"
                   :value="dict.value"></el-option>
               </el-select>
@@ -178,10 +177,14 @@ import { ref, reactive, toRefs } from 'vue';
 import { addOffSiteVehicleNoAuth } from "@/api/system/OffSiteVehicle";
 import { useRoute, useRouter } from 'vue-router';
 
+import { onMounted } from 'vue';
+
 const { proxy } = getCurrentInstance();
-const { plate_color, emission_standard, fuel_type, vehicle_type, usage_property ,car_type} = proxy.useDict('plate_color', 'emission_standard', 'fuel_type', 'vehicle_type', 'usage_property','car_type');
+const { plate_color, emission_standard, fuel_type, vehicle_type, usage_property, car_type } = proxy.useDict('plate_color', 'emission_standard', 'fuel_type', 'vehicle_type', 'usage_property', 'car_type');
 const route = useRoute();
 const router = useRouter();
+
+const isFleetNameChanged = ref(false);
 
 const data = reactive({
   form: {
@@ -250,6 +253,12 @@ function reset() {
   form.value.companyId = route.query.aid;
 }
 
+function onOwnerNameChange(newVal) {
+  if (!isFleetNameChanged.value) {
+    form.value.fleetName = newVal;
+  }
+}
+
 // 提交按钮
 function submitForm() {
   form.companyId = route.query.aid
@@ -262,6 +271,16 @@ function submitForm() {
     }
   });
 }
+
+onMounted(() => {
+  document.body.addEventListener('touchstart', disableDoubleTapZoom, { passive: false });
+});
+
+const disableDoubleTapZoom = (e) => {
+  if (e.touches.length > 1) {
+    e.preventDefault(); // 阻止触摸事件
+  }
+};
 </script>
 
 <style scoped>
