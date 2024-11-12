@@ -48,7 +48,19 @@ export function selectIds(){
     url: '/system/info/ids',
     method: 'get'
   })
-  console.log("ehhdjuiahduhs")
-  console.log("11111111111"+res)
   return res
+}
+
+export async function getStaticQrCode(companyId) {
+  try {
+    const res = await request({
+      url: '/qr/static?aid=' + companyId,
+      method: 'get',
+      responseType: 'arraybuffer'  // Ensure responseType is set for binary data
+    });
+    console.log("QR Code response:", res);
+    return res;
+  } catch (error) {
+    console.error("Error fetching QR code:", error);
+  }
 }

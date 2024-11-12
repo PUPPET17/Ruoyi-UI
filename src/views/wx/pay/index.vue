@@ -34,7 +34,6 @@ import { ref, reactive, computed, onUnmounted, onMounted } from 'vue';
 import request from '@/utils/request';
 import { ElMessage } from 'element-plus';
 import { useRoute, useRouter } from 'vue-router';
-import swal from 'sweetalert';
 
 export default {
     data() {
@@ -56,7 +55,7 @@ export default {
     methods: {
         wxpay(id, cost) {
             if (cost <= 0.0) {
-                this.$swal("支付金额不能为零");
+                // this.$swal("支付金额不能为零");
                 return;
             }
 

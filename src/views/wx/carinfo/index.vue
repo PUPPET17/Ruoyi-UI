@@ -2,7 +2,8 @@
   <div class="app-container">
     <div class="form-container">
       <!-- 添加或修改场外车辆信息对话框 -->
-      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="100px" label-position="right" size="large">
+      <el-form ref="OffSiteVehicleRef" :model="form" :rules="rules" label-width="100px" label-position="right"
+        size="large">
         <el-row :gutter="20">
           <!-- <el-form-item label="企业名称" prop="companyId">
     <el-select v-model="form.companyId" placeholder="请选择企业" clearable filterable>
@@ -11,8 +12,11 @@
   </el-form-item> -->
 
           <el-col :span="24">
-            <el-form-item label="车牌号" prop="plateNumber">
+            <!-- <el-form-item label="车牌号" prop="plateNumber">
               <plate-input v-model="form.plateNumber"></plate-input>
+            </el-form-item> -->
+            <el-form-item label="车牌号" prop="plateNumber">
+              <el-input v-model="form.plateNumber" placeholder="请输入车牌号" show-word-limit maxlength="8"/>
             </el-form-item>
           </el-col>
 
@@ -82,14 +86,14 @@
 
           <el-col :span="24">
             <el-form-item label="注册日期" prop="registrationDate">
-              <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD" :editable=false
-                placeholder="请选择注册日期" />
+              <el-date-picker clearable v-model="form.registrationDate" type="date" value-format="YYYY-MM-DD"
+                :editable=false placeholder="请选择注册日期" />
             </el-form-item>
           </el-col>
 
           <el-col :span="24">
             <el-form-item label="发证日期" prop="certDate">
-              <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD" :editable=false 
+              <el-date-picker clearable v-model="form.certDate" type="date" value-format="YYYY-MM-DD" :editable=false
                 placeholder="请选择发证日期" />
             </el-form-item>
           </el-col>
@@ -174,10 +178,12 @@
 
 <script setup>
 import { ref, reactive, toRefs } from 'vue';
-import { addOffSiteVehicleNoAuth } from "@/api/system/OffSiteVehicle";
+import { addOffSiteVehicleNoAuth } from "@/api/wx/offSite";
+// import { addOffSiteVehicleNoAuth } from "@/api/system/OffSiteVehicle";
 import { useRoute, useRouter } from 'vue-router';
 
 import { onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
 
 const { proxy } = getCurrentInstance();
 const { plate_color, emission_standard, fuel_type, vehicle_type, usage_property, car_type } = proxy.useDict('plate_color', 'emission_standard', 'fuel_type', 'vehicle_type', 'usage_property', 'car_type');
@@ -188,7 +194,7 @@ const isFleetNameChanged = ref(false);
 
 const data = reactive({
   form: {
-    companyId: route.query.aid,
+    companyId: null,
     plateNumber: null,
     vin: null,
     vehicleType: null,
@@ -216,8 +222,8 @@ const data = reactive({
   rules: {
     companyId: [{ required: true, message: '公司id不能为空', trigger: 'blur' }],
     plateNumber: [
-      { required: true, message: '车牌号不能为空', trigger: 'blur' },
-      { min: 7, max: 7, message: '车牌号必须是七个字符', trigger: 'blur' }
+      { required: true, message: '传统车牌号7个字符，新能源车8个字符', trigger: 'blur' },
+      { min: 7, max: 8, message: '传统车牌号7个字符，新能源车8个字符', trigger: 'blur' }
     ],
     vin: [
       { required: true, message: 'VIN不能为空', trigger: 'blur' },
@@ -261,20 +267,69 @@ function onOwnerNameChange(newVal) {
 
 // 提交按钮
 function submitForm() {
-  form.companyId = route.query.aid
+  form.companyId = route.query.aid;
   proxy.$refs["OffSiteVehicleRef"].validate(valid => {
     if (valid) {
-      addOffSiteVehicleNoAuth(form.value).then(() => {
-        proxy.$modal.msgSuccess("新增成功");
-        reset(); // 提交后重置表单
+      addOffSiteVehicleNoAuth(form.value).then(response => {
+        // 判断返回的状态，如果不是200则显示错误信息
+        if (response.status === 200) {
+          proxy.$modal.msgSuccess("新增成功");
+          // reset(); // 提交后重置表单
+        } else {
+          // 如果接口返回非200状态，显示错误信息
+          ElMessage.error(response.msg || "操作失败");
+        }
+      }).catch(error => {
+        // 如果请求失败，捕获异常并显示错误
+        ElMessage.error(error.message || "请求失败，请稍后重试");
       });
     }
   });
 }
 
+
 onMounted(() => {
   document.body.addEventListener('touchstart', disableDoubleTapZoom, { passive: false });
+  const ocrData = route.query.ocrData;
+  const aid =  route.query.aid;
+  if (ocrData) {
+    try {
+      const parsedData = JSON.parse(ocrData);
+      // 赋值表单数据
+      form.value.companyId = aid;
+      form.value.plateNumber = parsedData.vehicleLicenseId || null;
+      form.value.vin = parsedData.vehicleIdentificationCode || null;
+      form.value.vehicleType = parsedData.vehicleType || null;
+      form.value.carType = null;
+      form.value.emissionStage = parsedData.emissionStage || null;
+      form.value.brandModel = parsedData.vehicleBrandType || null;
+      form.value.registrationDate = parsedData.vehicleLicenseDateStart ? formatDate(parsedData.vehicleLicenseDateStart) : null;
+      form.value.certDate = parsedData.vehicleLicenseFirstDate ? formatDate(parsedData.vehicleLicenseFirstDate) : null;
+      form.value.plateColor = null; 
+      form.value.usageProperty = parsedData.vehicleUse || null;
+      form.value.engineNumber = parsedData.vehicleEngineId || null;
+      form.value.ownerName = parsedData.vehicleLicenseOwner || null;
+      form.value.address = parsedData.vehicleLicenseAddress || null;
+      form.value.loadingCapacity = null; // 默认值为空
+      form.value.totalWeight = parsedData.weight || null;
+      form.value.fuelType = parsedData.flueType || null;
+      form.value.fleetName = parsedData.vehicleLicenseOwner || null; // 默认用车主名字作为车队名称
+      form.value.drivingImage = null; // 可根据实际情况处理
+      form.value.chassisImage = null; // 可根据实际情况处理
+      form.value.accompanyingDocumentsImage = null; // 可根据实际情况处理
+    } catch (error) {
+      ElMessage.error('解析 OCR 数据失败:', error);
+    }
+  }
 });
+
+// 格式化日期（如果需要）
+function formatDate(dateStr) {
+  const year = dateStr.substring(0, 4);
+  const month = dateStr.substring(4, 6);
+  const day = dateStr.substring(6, 8);
+  return `${year}-${month}-${day}`;
+}
 
 const disableDoubleTapZoom = (e) => {
   if (e.touches.length > 1) {
