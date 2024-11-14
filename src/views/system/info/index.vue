@@ -165,81 +165,212 @@
 
     <!-- 添加或修改企业信息对话框 -->
     <el-dialog :title="title" v-model="open" width="800px" append-to-body>
-      <el-form ref="infoRef" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="企业名称" prop="companyName">
-          <el-input v-model="form.companyName" placeholder="请输入企业名称" />
-        </el-form-item>
-        <el-form-item label="行政区划" prop="region">
-          <el-input v-model="form.region" placeholder="请输入行政区划" />
-        </el-form-item>
-        <!-- <el-form-item label="企业id" prop="companyId">
-          <el-input v-model="form.companyId" placeholder="请输入企业id" />
-        </el-form-item> -->
-        <el-form-item label="创建时间" prop="createDate">
-          <el-date-picker clearable v-model="form.createDate" type="date" value-format="YYYY-MM-DD"
-            placeholder="请选择创建时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="企业编码" prop="identifier">
-          <el-input v-model="form.identifier" placeholder="请输入企业编码" />
-        </el-form-item>
-        <el-form-item label="联网状态" prop="isOnline">
-          <el-radio-group v-model="form.isOnline">
-            <el-radio v-for="dict in is_online" :key="dict.value" :label="parseInt(dict.value)">{{ dict.label
-              }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="企业地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入企业地址" />
-        </el-form-item>
-        <el-form-item label="企业评级" prop="level">
-          <el-input v-model="form.level" placeholder="请输入企业评级" />
-        </el-form-item>
-        <el-form-item label="法人代表" prop="legalRpst">
-          <el-input v-model="form.legalRpst" placeholder="请输入法人代表" />
-        </el-form-item>
-        <el-form-item label="ocr收费标准" prop="ocrFeeStandard">
-          <el-input v-model="form.ocrFeeStandard" placeholder="请输入ocr收费标准" />
-        </el-form-item>
-        <el-form-item label="服务费" prop="serviceFee">
-          <el-input v-model="form.serviceFee" placeholder="请输入服务费" />
-        </el-form-item>
-        <el-form-item label="服务失效时间" prop="expireTime">
-          <el-date-picker clearable v-model="form.expireTime" type="date" value-format="YYYY-MM-DD"
-            placeholder="请选择服务失效时间">
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="自动开闸" prop="isAutoOpen">
-          <el-radio-group v-model="form.isAutoOpen">
-            <el-radio v-for="dict in is_auto_open" :key="dict.value" :label="parseInt(dict.value)">{{ dict.label
-              }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="录入车辆" prop="isRegis">
-          <el-radio-group v-model="form.isRegis">
-            <el-radio v-for="dict in is_regis" :key="dict.value" :label="parseInt(dict.value)">{{ dict.label
-              }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="企业分类" prop="classifi">
-          <el-input v-model="form.classifi" placeholder="请输入企业分类" />
-        </el-form-item>
-        <el-form-item label="禁行排放等级" prop="emissionState">
-          <el-select v-model="form.emissionState" placeholder="请选择禁行排放等级">
-            <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label"
-              :value="parseInt(dict.value)"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="接口平台" prop="apiStrategy">
-          <el-radio-group v-model="form.apiStrategy">
-            <el-radio v-for="dict in api_strategy" :key="dict.value" :label="parseInt(dict.value)">{{ dict.label
-              }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="地磅系统密码" prop="weightPassword">
-          <el-input v-model="form.weightPassword" placeholder="请输入地磅系统密码" />
-        </el-form-item>
+      <el-form ref="infoRef" :model="form" :rules="rules" label-width="100px" label-position="left">
+        <!-- 使用一个el-row布局所有项 -->
+        <el-row :gutter="20">
+          <el-col :span="8">
+            <el-form-item label="企业名称" prop="companyName">
+              <el-input v-model="form.companyName" placeholder="请输入企业名称" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="行政区划" prop="region">
+              <el-input v-model="form.region" placeholder="请输入行政区划" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="8">
+            <el-form-item label="创建时间" prop="createDate">
+              <el-date-picker clearable v-model="form.createDate" type="date" value-format="YYYY-MM-DD"
+                placeholder="请选择创建时间" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="企业编码" prop="identifier">
+              <el-input v-model="form.identifier" placeholder="请输入企业编码" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="是否接入接口平台" prop="isOnline" label-width="auto">
+              <el-radio-group v-model="form.isOnline">
+                <el-radio v-for="dict in is_online" :key="dict.value" :value="parseInt(dict.value)">{{ dict.label
+                  }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="企业地址" prop="address">
+              <el-input v-model="form.address" placeholder="请输入企业地址" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="企业评级" prop="level">
+              <el-input v-model="form.level" placeholder="请输入企业评级" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="法人代表" prop="legalRpst">
+              <el-input v-model="form.legalRpst" placeholder="请输入法人代表" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="ocr收费标准" prop="ocrFeeStandard">
+              <el-input v-model="form.ocrFeeStandard" placeholder="请输入ocr收费标准" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="服务费" prop="serviceFee">
+              <el-input v-model="form.serviceFee" placeholder="请输入服务费" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="服务失效时间" prop="expireTime">
+              <el-date-picker clearable v-model="form.expireTime" type="date" value-format="YYYY-MM-DD"
+                placeholder="请选择服务失效时间" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="自动开闸" prop="isAutoOpen">
+              <el-radio-group v-model="form.isAutoOpen">
+                <el-radio v-for="dict in is_auto_open" :key="dict.value" :value="parseInt(dict.value)">{{ dict.label
+                  }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="录入车辆" prop="isRegis">
+              <el-radio-group v-model="form.isRegis">
+                <el-radio v-for="dict in is_regis" :key="dict.value" :value="parseInt(dict.value)">{{ dict.label
+                  }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="企业分类" prop="classifi">
+              <el-input v-model="form.classifi" placeholder="请输入企业分类" />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="禁行排放等级" prop="emissionState">
+              <el-select v-model="form.emissionState" placeholder="请选择禁行排放等级">
+                <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12">
+            <el-form-item label="地磅系统密码" prop="weightPassword">
+              <el-input v-model="form.weightPassword" placeholder="请输入地磅系统密码" type="password" show-password />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24">
+            <el-form-item label="接口平台" prop="apiStrategy">
+              <el-radio-group v-model="form.apiStrategy" @change="handleStrategyChange">
+                <el-radio v-for="dict in api_strategy" :key="dict.value" :value="parseInt(dict.value)">{{ dict.label
+                  }}</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
+      <template v-if="form.apiStrategy">
+        <el-divider content-position="left" border-style="solid">
+          {{ getPlatformTitle(form.apiStrategy) }}接口平台信息配置
+        </el-divider>
+
+        <!-- 香河 接口平台配置 -->
+        <el-row v-if="form.apiStrategy === 1" :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="AppID" label-width="80px" label-position="left">
+              <el-input v-model="platformConfig.platform1.userName" placeholder="请输入AppID" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="AppSecret" label-width="80px" label-position="left">
+              <el-input v-model="platformConfig.platform1.password" placeholder="请输入AppSecret" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <!-- 平台2配置 -->
+        <el-row v-if="form.apiStrategy === 2" :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="用户名" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.username" placeholder="请输入用户名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.password" placeholder="请输入密码" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="ClientId" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.clientId" placeholder="请输入ClientId" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="ClientSecret" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.clientSecret" placeholder="请输入clientSecret" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="RSA公钥" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.pukrsa" placeholder="请输入RSA公钥" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="RSA私钥" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.prkrsa" placeholder="请输入RSA私钥" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="SM2公钥" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.puksm2" placeholder="请输入SM2公钥" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="SM2私钥" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.prksm2" placeholder="请输入SM2私钥" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="CallerID" label-width="100px" label-position="left">
+              <el-input v-model="platformConfig.platform2.callerId" placeholder="请输入CallerID" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <!-- 平台3配置 -->
+        <el-row v-if="form.apiStrategy === 3" :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="用户名" label-width="80px" label-position="left">
+              <el-input v-model="platformConfig.platform3.username" placeholder="请输入用户名" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="密码" label-width="80px" label-position="left">
+              <el-input v-model="platformConfig.platform3.password" placeholder="请输入密码" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </template>
+
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -251,8 +382,9 @@
 </template>
 
 <script setup name="Info">
-import { listInfo, getInfo, delInfo, addInfo, updateInfo, getStaticQrCode } from "@/api/system/info";
-
+import { listInfo, getInfo, delInfo, addInfo, updateInfo, getStaticQrCode, getAPIConfig, addApi } from "@/api/system/info";
+import { ref, reactive, toRefs } from 'vue';
+import { getCurrentInstance } from 'vue';
 const { proxy } = getCurrentInstance();
 const { api_strategy, is_online, is_regis, is_auto_open, emission_state } = proxy.useDict('api_strategy', 'is_online', 'is_regis', 'is_auto_open', 'emission_state');
 
@@ -301,10 +433,118 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 const { qrcode, qrcodeDialogVisible } = toRefs(data);
 
+// 添加接口平台配置对象
+const platformConfig = reactive({
+  // 香河 接口平台配置
+  platform1: {
+    id: '',
+    companyId: '',
+    identifier: '',
+    companyName: '',
+    userName: '',
+    password: ''
+  },
+  // 唐山 接口平台配置
+  platform2: {
+    id: '',
+    companyId: '',
+    identifier: '',
+    companyName: '',
+    username: '',
+    password: '',
+    callerId: '',
+    pukrsa: '',
+    prkrsa: '',
+    puksm2: '',
+    prksm2: '',
+    clientId: '',
+    clientSecret: ''
+  },
+  // 三门峡 接口平台配置
+  platform3: {
+    id: '',
+    companyId: '',
+    identifier: '',
+    companyName: '',
+    username: '',
+    password: '',
+  }
+});
+
+// 校验接口平台配置信息
+const validatePlatformConfig = () => {
+  const strategy = form.value.apiStrategy;
+
+  switch (strategy) {
+    case 1: // 香河
+      if (!platformConfig.platform1.userName) {
+        proxy.$modal.msgError("请输入AppID");
+        return false;
+      }
+      if (!platformConfig.platform1.password) {
+        proxy.$modal.msgError("请输入AppSecret");
+        return false;
+      }
+      break;
+
+    case 2: // 唐山
+      if (!platformConfig.platform2.username) {
+        proxy.$modal.msgError("请输入用户名");
+        return false;
+      }
+      if (!platformConfig.platform2.password) {
+        proxy.$modal.msgError("请输入密码");
+        return false;
+      }
+      if (!platformConfig.platform2.callerId) {
+        proxy.$modal.msgError("请输入callerId");
+        return false;
+      }
+      if (!platformConfig.platform2.pukrsa) {
+        proxy.$modal.msgError("请输入RSA公钥");
+        return false;
+      }
+      if (!platformConfig.platform2.prkrsa) {
+        proxy.$modal.msgError("请输入RSA私钥");
+        return false;
+      }
+      if (!platformConfig.platform2.puksm2) {
+        proxy.$modal.msgError("请输入SM2公钥");
+        return false;
+      }
+      if (!platformConfig.platform2.prksm2) {
+        proxy.$modal.msgError("请输入SM2私钥");
+        return false;
+      }
+      if (!platformConfig.platform2.clientId) {
+        proxy.$modal.msgError("请输入客户端ID");
+        return false;
+      }
+      if (!platformConfig.platform2.clientSecret) {
+        proxy.$modal.msgError("请输入客户端密钥");
+        return false;
+      }
+      break;
+
+    case 3: // 三门峡
+      if (!platformConfig.platform3.username) {
+        proxy.$modal.msgError("请输入用户名");
+        return false;
+      }
+      if (!platformConfig.platform3.password) {
+        proxy.$modal.msgError("请输入密码");
+        return false;
+      }
+      break;
+  }
+
+  return true;
+};
+
 /** 查询企业信息列表 */
 function getList() {
   loading.value = true;
-  console.log(queryParams.value)
+  // console.log(queryParams.value)
   listInfo(queryParams.value).then(response => {
     infoList.value = response.rows;
     total.value = response.total;
@@ -343,6 +583,14 @@ function reset() {
     deptId: null,
     weightPassword: null
   };
+
+  // 重置所有平台配置
+  Object.keys(platformConfig).forEach(platform => {
+    Object.keys(platformConfig[platform]).forEach(key => {
+      platformConfig[platform][key] = '';
+    });
+  });
+
   proxy.resetForm("infoRef");
 }
 
@@ -372,15 +620,34 @@ function handleAdd() {
   title.value = "添加企业信息";
 }
 
-/** 修改按钮操作 */
-function handleUpdate(row) {
+async function handleUpdate(row) {
   reset();
-  const _id = row.id || ids.value
-  getInfo(_id).then(response => {
-    form.value = response.data;
+  const _id = row.id || ids.value[0];
+  const selectedRow = infoList.value?.find(item => item.id === _id);
+  console.log(selectedRow ? `选中行的企业名称: ${selectedRow.companyName}` : "未找到对应的企业信息");
+
+  try {
+    const apiResponse = await getAPIConfig(selectedRow.companyId, selectedRow.apiStrategy);
+    console.log("后端返回的历史接口配置信息:", apiResponse.data);
+    console.log("选中行的接口平台策略:", selectedRow.apiStrategy);
+    if (apiResponse.data.data && selectedRow.apiStrategy) {
+      const platform = `platform${selectedRow.apiStrategy}`;
+      
+      platformConfig[platform] = {
+        ...platformConfig[platform],
+        ...apiResponse.data.data
+      };
+      console.log(`要设置的platform: ${platform}`);
+      console.log(`getAPIConfig结果:` + platformConfig[platform]);
+    }
+    // 确保在设置表单数据之前，platformConfig 已经更新
+    const infoResponse = await getInfo(_id);
+    form.value = { ...infoResponse.data, ...platformConfig[form.value.apiStrategy] }; // 使用 form.value.apiStrategy 代替 platform
     open.value = true;
     title.value = "修改企业信息";
-  });
+  } catch (error) {
+    console.error("获取信息时出错:", error);
+  }
 }
 
 // 获取二维码
@@ -391,7 +658,7 @@ function getQRCode(row) {
   }
   const companyId = row.companyId;
   getStaticQrCode(companyId).then(response => {
-    console.log("Response:", response);
+    console.log("二维码响应:", response);
     if (!response) {
       console.error("No QR code data returned");
       return;
@@ -416,6 +683,34 @@ function closeQRCodeDialog() {
 function submitForm() {
   proxy.$refs["infoRef"].validate(valid => {
     if (valid) {
+      // 如果选择了接口平台，需要校验平台配置
+      if (form.value.apiStrategy && !validatePlatformConfig()) {
+        return;
+      }
+      console.log("校验通过，现填写的配置" + platformConfig[`platform${form.value.apiStrategy}`] + ", 当前选中的接口平台策略:" + form.value.apiStrategy);
+      console.log("platformConfig:", platformConfig[`platform${form.value.apiStrategy}`]);
+      platformConfig[`platform${form.value.apiStrategy}`].companyId = form.value.companyId;
+      platformConfig[`platform${form.value.apiStrategy}`].identifier = form.value.identifier;
+      // 创建 APIConfig 泛型对象
+      const submitData = {
+        apiStrategy: form.value.apiStrategy,
+        data: platformConfig[`platform${form.value.apiStrategy}`]
+      };
+      console.log("提交的API配置数据:", submitData);
+      // 提交API配置表单
+      addApi(submitData).then(response => {
+        // 校验响应数据
+        if (response && response.code === 200) {
+          console.log("API配置添加成功");
+        } else {
+          console.error("API配置添加失败:", response.message || "未知错误");
+          proxy.$modal.msgError("API配置添加失败: " + (response.message || "未知错误")); // 显示错误信息
+        }
+      }).catch(error => {
+        console.error("Failed to add API config:", error);
+        proxy.$modal.msgError("添加API配置时发生错误: " + error.message); // 显示错误信息
+      });
+
       if (form.value.id != null) {
         updateInfo(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
@@ -459,6 +754,24 @@ function downloadQRCode() {
   link.click();
   document.body.removeChild(link);
 }
+
+// 获取平台标题
+const getPlatformTitle = (strategy) => {
+  const platform = api_strategy.value.find(item => item.value === strategy);
+  return platform ? platform.label : '';
+};
+
+// 处理平台切换
+const handleStrategyChange = (value) => {
+  // 清空当前平台的配置
+  if (value) {
+    const currentPlatform = `platform${value}`;
+    // 先不清空原配置
+    // Object.keys(platformConfig[currentPlatform]).forEach(key => {
+    //   platformConfig[currentPlatform][key] = '';
+    // });
+  }
+};
 
 getList();
 </script>
@@ -511,30 +824,25 @@ getList();
   /* 去掉聚焦时的蓝色边框 */
 }
 
-.qrcode-dialog :deep(.el-dialog) {
+.qrcode-dialog .el-dialog {
   border-radius: 8px;
   overflow: hidden;
-  margin: 0 !important;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
 }
 
-.qrcode-dialog :deep(.el-dialog__header) {
+.qrcode-dialog .el-dialog__header {
   margin: 0;
   padding: 16px 20px;
   border-bottom: 1px solid #f0f0f0;
   background-color: #fafafa;
 }
 
-.qrcode-dialog :deep(.el-dialog__title) {
+.qrcode-dialog .el-dialog__title {
   font-size: 16px;
   font-weight: 500;
   color: #333;
 }
 
-.qrcode-dialog :deep(.el-dialog__body) {
+.qrcode-dialog .el-dialog__body {
   padding: 24px;
 }
 
@@ -557,13 +865,13 @@ getList();
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.05);
 }
 
-.qrcode-dialog :deep(.el-overlay) {
+.qrcode-dialog .el-overlay {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.qrcode-dialog :deep(.el-dialog) {
+.qrcode-dialog .el-dialog {
   margin-top: 0 !important;
   border-radius: 8px;
   overflow: hidden;
@@ -675,6 +983,7 @@ getList();
     opacity: 0;
     transform: scale(0.9);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -686,6 +995,7 @@ getList();
     opacity: 0;
     backdrop-filter: blur(0);
   }
+
   to {
     opacity: 1;
     backdrop-filter: blur(3px);
@@ -697,6 +1007,7 @@ getList();
     opacity: 0;
     transform: scale(0.95) translateY(-20px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -708,6 +1019,7 @@ getList();
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -727,6 +1039,7 @@ getList();
     opacity: 1;
     backdrop-filter: blur(3px);
   }
+
   to {
     opacity: 0;
     backdrop-filter: blur(0);
@@ -738,6 +1051,7 @@ getList();
     opacity: 1;
     transform: scale(1);
   }
+
   to {
     opacity: 0;
     transform: scale(0.95);
@@ -765,6 +1079,7 @@ getList();
     opacity: 1;
     backdrop-filter: blur(3px);
   }
+
   to {
     opacity: 0;
     backdrop-filter: blur(0);
@@ -776,6 +1091,7 @@ getList();
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+
   to {
     opacity: 0;
     transform: scale(0.95) translateY(20px);
@@ -821,7 +1137,7 @@ getList();
 }
 
 .qrcode-image {
-  margin-bottom: 0; 
+  margin-bottom: 0;
 }
 
 @keyframes fadeInUp {
@@ -829,9 +1145,24 @@ getList();
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 添加一些过渡效果 */
+.el-divider {
+  margin: 24px 0 16px;
+}
+
+.el-row {
+  transition: all 0.3s ease-in-out;
+}
+
+/* 可以添加一些输入框的样式 */
+.el-input.is-password>>>.el-input__inner {
+  letter-spacing: 1px;
 }
 </style>

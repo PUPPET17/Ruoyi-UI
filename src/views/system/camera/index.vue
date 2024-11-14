@@ -7,7 +7,7 @@
           <el-form-item label="相机品牌" prop="cameraBrand">
             <div class="custom-style">
               <el-segmented v-model="queryParams.cameraBrand"
-                :options="camera_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="camera_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
@@ -16,7 +16,7 @@
           <el-form-item label="屏幕品牌" prop="screenBrand">
             <div class="custom-style">
               <el-segmented v-model="queryParams.screenBrand"
-                :options="screen_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="screen_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
@@ -24,16 +24,16 @@
           <el-form-item label="出入口标识" prop="entranceFlag">
             <div class="custom-style">
               <el-segmented v-model="queryParams.entranceFlag"
-                :options="gate_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="gate_type.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="5">
           <el-form-item label="认证状态" prop="isValid">
             <div class="custom-style">
               <el-segmented v-model="queryParams.isValid"
-                :options="certified.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="certified.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
@@ -42,7 +42,7 @@
           <el-form-item label="道闸类型" prop="gateType">
             <div class="custom-style">
               <el-segmented v-model="queryParams.gateType"
-                :options="tunnel_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="tunnel_type.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
@@ -78,7 +78,7 @@
           <el-form-item label="相机类型" prop="captureType">
             <div class="custom-style">
               <el-segmented v-model="queryParams.captureType"
-                :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
             </div>
           </el-form-item>
         </el-col>
@@ -184,7 +184,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="相机名称" prop="cameraName">
+            <el-form-item label="相机名称" prop="cameraName" label-width="auto">
               <el-input v-model="form.cameraName" placeholder="请输入相机名称" />
             </el-form-item>
           </el-col>
@@ -196,19 +196,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="屏幕品牌" prop="screenBrand">
+            <el-form-item label="屏幕品牌" prop="screenBrand" label-width="auto"> 
               <el-select v-model="form.screenBrand" placeholder="请选择屏幕品牌" clearable>
                 <el-option v-for="dict in screen_brand" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="相机序列号" prop="cameraSn">
+            <el-form-item label="相机序列号" prop="cameraSn" label-width="auto">
               <el-input v-model="form.cameraSn" placeholder="请输入相机序列号" clearable @keyup.enter="handleQuery" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="屏幕序列号" prop="screenSn">
+            <el-form-item label="屏幕序列号" prop="screenSn" label-width="auto">
               <el-input v-model="form.screenSn" placeholder="请输入屏幕序列号" clearable @keyup.enter="handleQuery" />
             </el-form-item>
           </el-col>
@@ -218,59 +218,59 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="道闸编号" prop="turnNo">
+            <el-form-item label="道闸编号" prop="turnNo" label-width="auto">
               <el-input v-model="form.turnNo" placeholder="道闸顺序编号,如01,02(必须是两位数字)" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <!-- A,B,C 选项 -->
-            <el-form-item label="出入口编号" prop="entranceNo" style="width: 100%; margin-bottom: 20px;">
+            <el-form-item label="出入口编号" prop="entranceNo" style="width: 100%; margin-bottom: 20px;" label-width="auto">
               <div class="custom-style">
                 <el-segmented v-model="form.entranceNo"
-                  :options="entrance_no.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                  :options="entrance_no.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
               </div>
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="相机经度" prop="longitude">
+            <el-form-item label="相机经度" prop="longitude" label-width="auto">
               <el-input v-model="form.longitude" placeholder="请输入相机经度" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="相机纬度" prop="latitude">
+            <el-form-item label="相机纬度" prop="latitude" label-width="auto" >
               <el-input v-model="form.latitude" placeholder="请输入相机纬度" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="IP地址" prop="ip">
+            <el-form-item label="IP地址" prop="ip" label-width="auto">
               <el-input v-model="form.ip" placeholder="请输入IP地址" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="端口号" prop="port">
+            <el-form-item label="端口号" prop="port" label-width="auto">
               <el-input v-model="form.port" placeholder="请输入端口号" />
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="通道号" prop="channels">
+            <el-form-item label="通道号" prop="channels" label-width="auto">
               <el-input v-model="form.channels" placeholder="请输入通道号" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="用户名" prop="username">
+            <el-form-item label="用户名" prop="username" label-width="auto">
               <el-input v-model="form.username" placeholder="请输入用户名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="密码" prop="password">
+            <el-form-item label="密码" prop="password" label-width="auto">
               <el-input v-model="form.password" placeholder="请输入密码" show-password />
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="相机类型" prop="captureType">
+            <el-form-item label="相机类型" prop="captureType" label-width="auto">
               <div class="custom-style">
                 <el-segmented v-model="form.captureType"
-                  :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                  :options="cam_type.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
               </div>
             </el-form-item>
           </el-col>
@@ -282,10 +282,10 @@
             </el-form-item>
           </el-col> -->
           <el-col :span="12">
-            <el-form-item label="道闸类型" prop="gateType">
+            <el-form-item label="道闸类型" prop="gateType" label-width="auto">
               <div class="custom-style">
                 <el-segmented v-model="form.gateType"
-                  :options="tunnel_type.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                  :options="tunnel_type.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
               </div>
             </el-form-item>
           </el-col>

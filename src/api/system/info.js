@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { pa } from 'element-plus/es/locales.mjs'
 
 // 查询企业信息列表
 export function listInfo(query) {
@@ -64,3 +65,31 @@ export async function getStaticQrCode(companyId) {
     console.error("Error fetching QR code:", error);
   }
 }
+
+export function getAPIConfig(companyId,apiStrategy){
+  return request({
+    url: '/system/info/api',
+    method: 'get',
+    params: {
+      companyId: companyId,
+      apiStrategy: apiStrategy
+    }
+  })
+}
+
+export function addApi(data){
+  return request({
+    url: '/system/info/api',
+    method: 'post',
+    data: data
+  })
+}
+
+export function getConfig(companyId){
+  return request({
+    url: '/system/info/config',
+    method: 'get',
+    params: companyId
+  })
+}
+
