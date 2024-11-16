@@ -42,3 +42,10 @@ export function delRecord(data) {
     method: 'delete'
   });
 }
+
+export function reAuth(data) {
+  return request({
+    url: '/transit/record/reAuth/'+data,
+    method: 'get',
+  });
+}

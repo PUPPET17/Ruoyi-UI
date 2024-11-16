@@ -267,13 +267,14 @@ function onOwnerNameChange(newVal) {
 
 // 提交按钮
 function submitForm() {
-  form.companyId = route.query.aid;
+  form.value.companyId = route.query.aid;
+  console.log("提交的表单数据:", form.value);
   proxy.$refs["OffSiteVehicleRef"].validate(valid => {
     if (valid) {
       addOffSiteVehicleNoAuth(form.value).then(response => {
         // 判断返回的状态，如果不是200则显示错误信息
         if (response.status === 200) {
-          proxy.$modal.msgSuccess("新增成功");
+          ElMessage.success("新增成功");
           // reset(); // 提交后重置表单
         } else {
           // 如果接口返回非200状态，显示错误信息

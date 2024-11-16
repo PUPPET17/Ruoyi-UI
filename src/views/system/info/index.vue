@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="auto"
       label-position="left">
       <el-row>
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="企业名称" prop="companyName">
             <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="bottom" popper-class="fade">
               <el-input v-model="queryParams.companyName" placeholder="请输入企业名称" clearable @keyup.enter="handleQuery" />
@@ -11,13 +11,13 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="企业评级" prop="level">
             <el-input v-model="queryParams.level" placeholder="请输入企业评级" clearable @keyup.enter="handleQuery" />
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="禁行排放等级" prop="emissionState">
             <el-select v-model="queryParams.emissionState" placeholder="请选择禁行排放等级" style="width: 180px;" clearable>
               <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label" :value="dict.value">
@@ -25,7 +25,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="10" />
+        <el-col :span="6" />
         <!-- <el-col :span="8">
           <el-form-item label="创建时间" prop="createDate">
             <el-date-picker clearable v-model="queryParams.createDate" type="date" value-format="YYYY-MM-DD"
@@ -40,7 +40,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8" /> -->
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="联网状态" prop="isOnline" style="width: 100%; margin-bottom: 20px;">
             <div class="custom-style">
               <el-segmented v-model="queryParams.isOnline"
@@ -433,7 +433,7 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 const { qrcode, qrcodeDialogVisible } = toRefs(data);
 
-// 添加接口平台配置对象
+// 接口平台配置对象
 const platformConfig = reactive({
   // 香河 接口平台配置
   platform1: {
@@ -813,15 +813,12 @@ getList();
   transform: translateY(-1px);
 }
 
-/* 确保按钮大小和文字都能完整显 */
 .custom-btn:active {
   background-color: #3398ff;
-  /* 按下时按钮变色 */
 }
 
 .custom-btn:focus {
   outline: none;
-  /* 去掉聚焦时的蓝色边框 */
 }
 
 .qrcode-dialog .el-dialog {

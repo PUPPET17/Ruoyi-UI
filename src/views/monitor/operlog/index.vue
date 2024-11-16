@@ -166,7 +166,9 @@
                   <el-form-item label="操作方法：">{{ form.method }}</el-form-item>
                </el-col>
                <el-col :span="24">
-                  <el-form-item label="请求参数：">{{ form.operParam }}</el-form-item>
+                  <el-form-item label="请求参数：">
+                     <el-input type="textarea" :rows="2" v-model="form.operParam" readonly autosize></el-input>
+                  </el-form-item>
                </el-col>
                <el-col :span="24">
                   <el-form-item label="返回参数：">{{ form.jsonResult }}</el-form-item>

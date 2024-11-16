@@ -43,7 +43,7 @@
           <el-form-item label="车辆类型" prop="classifyTitle" style="margin-bottom: 18px;">
             <div class="custom-style">
               <el-segmented v-model="queryParams.classifyTitle"
-                :options="classify_title.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="classify_title.map(dict => ({ label: dict.label, value: dict.value }))" />
             </div>
           </el-form-item>
         </el-col>
@@ -51,7 +51,7 @@
           <el-form-item label="通行状态" prop="state">
             <div class="custom-style">
               <el-segmented v-model="queryParams.state"
-                :options="transit_status.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="transit_status.map(dict => ({ label: dict.label, value: dict.value }))" />
             </div>
           </el-form-item>
         </el-col>
@@ -72,12 +72,14 @@
           v-hasPermi="['transit:transitrecord:edit']">修改</el-button>
       </el-col> -->
       <el-col :span="1.5">
-        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
-          v-hasPermi="['transit:transitrecord:remove']">删除</el-button>
+        <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="Download" @click="handleExport"
-          v-hasPermi="['transit:transitrecord:export']">导出</el-button>
+        <el-button type="warning" plain icon="Download" @click="handleExport">导出</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button type="warning" plain icon="Refresh" :disabled="multiple"
+          @click="handleReAuth">重新上传记录</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
@@ -131,7 +133,8 @@
           <span>{{ parseTime(scope.row.startDate, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns[10].visible" label="入场放行状态" align="center" prop="inboundAccess" width="120" show-overflow-tooltip>
+      <el-table-column v-if="columns[10].visible" label="入场放行状态" align="center" prop="inboundAccess" width="120"
+        show-overflow-tooltip>
         <template #default="scope">
           <dict-tag :options="inbound_outbound_access" :value="scope.row.inboundAccess" />
         </template>
@@ -141,21 +144,24 @@
           <span>{{ parseTime(scope.row.endDate, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="columns[11].visible" label="出场放行状态" align="center" prop="outboundAccess" width="120" show-overflow-tooltip>
+      <el-table-column v-if="columns[11].visible" label="出场放行状态" align="center" prop="outboundAccess" width="120"
+        show-overflow-tooltip>
         <template #default="scope">
           <dict-tag :options="inbound_outbound_access" :value="scope.row.outboundAccess" />
         </template>
       </el-table-column>
       <el-table-column v-if="columns[12].visible" label="电话号码" align="center" prop="tel" />
       <el-table-column v-if="columns[13].visible" label="用户名" align="center" prop="userName" />
-      
+
       <el-table-column v-if="columns[15].visible" label="入场货物名称" align="center" prop="inboundName" />
       <el-table-column v-if="columns[16].visible" label="入场货物质量" align="center" prop="inboundVolume" />
       <el-table-column v-if="columns[17].visible" label="入场货物单位" align="center" prop="inboundUnit" />
-      
+
       <el-table-column v-if="columns[19].visible" label="出场货物名称" align="center" prop="outboundName" />
       <el-table-column v-if="columns[20].visible" label="出场货物质量" align="center" prop="outboundVolume" />
       <el-table-column v-if="columns[21].visible" label="出场货物单位" align="center" prop="outboundUnit" />
+      <el-table-column v-if="columns[27].visible" label="货物来源地" align="center" prop="goodsOrigin" />
+      <el-table-column v-if="columns[28].visible" label="货物目的地" align="center" prop="goodsDestination" />
       <el-table-column v-if="columns[22].visible" label="入场自动补录" align="center" prop="isInboundAutoEntry">
         <template #default="scope">
           <dict-tag :options="auto_cargo_info" :value="scope.row.isInboundAutoEntry" />
@@ -176,15 +182,15 @@
           <dict-tag :options="certified" :value="scope.row.outboundCertStatus" />
         </template>
       </el-table-column>
-      <el-table-column v-if="columns[26].visible" label="接口信息" align="center" prop="certMessage" width="120" show-overflow-tooltip/>
-      <el-table-column v-if="columns[27].visible" label="货物来源地" align="center" prop="goodsOrigin" />
-      <el-table-column v-if="columns[28].visible" label="货物目的地" align="center" prop="goodsDestination" />
+      <el-table-column v-if="columns[26].visible" label="接口信息" align="center" prop="certMessage" width="120"
+        show-overflow-tooltip />
       <el-table-column label="操作" align="center" fixed="right">
         <template #default="scope">
           <!-- <el-button size="small" type="primary" @click="handleUpdate(scope.$index, scope.row)">
             Edit
           </el-button> -->
-          <el-button  size="small" icon="Delete" type="danger" @click="handleDelete( scope.row)" v-hasPermi="['transit:transitrecord:remove']"/>
+          <el-button size="small" icon="Delete" type="danger" @click="handleDelete(scope.row)"
+            v-hasPermi="['transit:transitrecord:remove']" />
           <!-- <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['transit:transitrecord:edit']">修改</el-button> -->
         </template>
       </el-table-column>
@@ -295,11 +301,11 @@
 </template>
 
 <script setup name="Record">
-import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api/transit/record";
+import { listRecord, getRecord, delRecord, addRecord, updateRecord, reAuth } from "@/api/transit/record";
 import { ref } from "vue";
 
 const { proxy } = getCurrentInstance();
-const { plate_color, classify_title, transit_status ,certified ,auto_cargo_info, inbound_outbound_access} = proxy.useDict('plate_color', 'classify_title', 'transit_status','certified','auto_cargo_info','inbound_outbound_access');
+const { plate_color, classify_title, transit_status, certified, auto_cargo_info, inbound_outbound_access } = proxy.useDict('plate_color', 'classify_title', 'transit_status', 'certified', 'auto_cargo_info', 'inbound_outbound_access');
 
 const recordList = ref([]);
 const open = ref(false);
@@ -354,9 +360,9 @@ const data = reactive({
     goodsOrigin: null,
     isInboundAutoEntry: null,
     isOutboundAutoEntry: null,
-    inboundCertStatus:null,
-    outboundCertStatus:null,
-    certMessage:null
+    inboundCertStatus: null,
+    outboundCertStatus: null,
+    certMessage: null
   },
   rules: {
   },
@@ -383,11 +389,11 @@ const data = reactive({
     { key: 'outboundName', label: '出场货物名称', visible: true },
     { key: 'outboundVolume', label: '出场货物质量', visible: true },
     { key: 'outboundUnit', label: '出场货物单位', visible: true },
-    {key: 'isInboundAutoEntry', label: '入场自动补录', visible: true },
-    {key: 'isOutboundAutoEntry', label: '出场自动补录', visible: true },
-    {key: 'inboundCertStatus', label: '入场认证状态', visible: true },
-    {key: 'outboundCertStatus', label: '出场认证状态', visible: true },
-    {key: 'certMessage', label: '接口信息', visible: true },
+    { key: 'isInboundAutoEntry', label: '入场自动补录', visible: true },
+    { key: 'isOutboundAutoEntry', label: '出场自动补录', visible: true },
+    { key: 'inboundCertStatus', label: '入场认证状态', visible: true },
+    { key: 'outboundCertStatus', label: '出场认证状态', visible: true },
+    { key: 'certMessage', label: '接口信息', visible: true },
     { key: 'goodsOrigin', label: '货物来源地', visible: true },
     { key: 'goodsDestination', label: '货物目的地', visible: true }
   ]
@@ -460,9 +466,9 @@ function reset() {
     goodsDestination: null,
     isInboundAutoEntry: null,
     isOutboundAutoEntry: null,
-    inboundCertStatus:null,
-    outboundCertStatus:null,
-    certMessage:null
+    inboundCertStatus: null,
+    outboundCertStatus: null,
+    certMessage: null
   };
   proxy.resetForm("transitrecordRef");
 }
@@ -534,6 +540,19 @@ function handleDelete(row) {
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");
+  }).catch(() => { });
+}
+
+/** 重新上传通行记录数据 */
+function handleReAuth() {
+  let _ids = ids.value;
+  _ids = Array.isArray(_ids) ? _ids : [_ids];
+  console.log('ids: ' + _ids);
+  proxy.$modal.confirm('是否重新上传编号为"' + _ids + '"的记录？').then(function () {
+    return reAuth(_ids);
+  }).then(() => {
+    getList();
+    proxy.$modal.msgSuccess("重新上传成功");
   }).catch(() => { });
 }
 

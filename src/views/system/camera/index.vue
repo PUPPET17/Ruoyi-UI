@@ -3,24 +3,32 @@
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="auto"
       label-position="left">
       <el-row :gutter="0">
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="相机品牌" prop="cameraBrand">
-            <div class="custom-style">
-              <el-segmented v-model="queryParams.cameraBrand"
-                :options="camera_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
-            </div>
+            <el-select v-model="queryParams.cameraBrand" placeholder="请选择相机品牌" style="width: 180px;" clearable>
+              <el-option
+                v-for="dict in camera_brand"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="屏幕品牌" prop="screenBrand">
-            <div class="custom-style">
-              <el-segmented v-model="queryParams.screenBrand"
-                :options="screen_brand.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
-            </div>
+            <el-select v-model="queryParams.screenBrand" placeholder="请选择屏幕品牌" style="width: 180px;" clearable>
+              <el-option
+                v-for="dict in screen_brand"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <el-form-item label="出入口标识" prop="entranceFlag">
             <div class="custom-style">
               <el-segmented v-model="queryParams.entranceFlag"
@@ -29,16 +37,15 @@
           </el-form-item>
         </el-col>
 
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item label="认证状态" prop="isValid">
-            <div class="custom-style">
-              <el-segmented v-model="queryParams.isValid"
-                :options="certified.map(dict => ({ label: dict.label, value: dict.value }))" size="" />
-            </div>
+            <el-select v-model="queryParams.isValid" placeholder="请选择认证状态" style="width: 180px;" clearable>
+              <el-option v-for="dict in certified" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
           </el-form-item>
         </el-col>
 
-        <el-col :span="4">
+        <el-col :span="6">
           <el-form-item label="道闸类型" prop="gateType">
             <div class="custom-style">
               <el-segmented v-model="queryParams.gateType"
@@ -61,7 +68,7 @@
           </el-form-item>
         </el-col> -->
 
-        <el-col :span="5">
+        <el-col :span="6">
           <el-form-item label="相机名" prop="cameraName">
             <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="right" popper-class="fade">
               <el-input v-model="queryParams.cameraName" placeholder="请输入相机名" clearable @keyup.enter="handleQuery">
@@ -74,7 +81,7 @@
             </el-tooltip>
           </el-form-item>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="12">
           <el-form-item label="相机类型" prop="captureType">
             <div class="custom-style">
               <el-segmented v-model="queryParams.captureType"
@@ -196,7 +203,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="屏幕品牌" prop="screenBrand" label-width="auto"> 
+            <el-form-item label="屏幕品牌" prop="screenBrand" label-width="auto">
               <el-select v-model="form.screenBrand" placeholder="请选择屏幕品牌" clearable>
                 <el-option v-for="dict in screen_brand" :key="dict.value" :label="dict.label" :value="dict.value" />
               </el-select>
@@ -237,7 +244,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="相机纬度" prop="latitude" label-width="auto" >
+            <el-form-item label="相机纬度" prop="latitude" label-width="auto">
               <el-input v-model="form.latitude" placeholder="请输入相机纬度" />
             </el-form-item>
           </el-col>
