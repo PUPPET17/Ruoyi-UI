@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "2.3.1",
+    "@vue-flow/core": "^1.41.5",
     "@vueup/vue-quill": "1.2.0",
     "@vueuse/core": "10.11.0",
     "ant-design-vue": "^4.2.5",
@@ -32,6 +33,7 @@
     "sweetalert2": "^11.14.4",
     "vue": "3.4.31",
     "vue-cropper": "1.1.1",
+    "vue-flow": "^0.3.0",
     "vue-router": "4.4.0"
   },
   "devDependencies": {

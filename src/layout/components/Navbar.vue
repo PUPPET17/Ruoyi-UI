@@ -1,11 +1,18 @@
 <template>
   <div class="navbar">
-    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+    <hamburger id="hamburger-container" :is-active="appStore.sidebar.opened" class="hamburger-container"
+      @toggleClick="toggleSideBar" />
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" v-if="!settingsStore.topNav" />
     <top-nav id="topmenu-container" class="topmenu-container" v-if="settingsStore.topNav" />
 
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
+
+        <el-button class="right-menu-item hover-effect" @click="handleButtonClick" @mouseover="handleMouseOver"
+          @mouseleave="handleMouseLeave">
+          点击我
+        </el-button>
+
         <header-search id="header-search" class="right-menu-item" />
 
         <!-- <el-tooltip content="源码地址" effect="dark" placement="bottom">
@@ -97,6 +104,20 @@ function logout() {
 const emits = defineEmits(['setLayout'])
 function setLayout() {
   emits('setLayout');
+}
+
+function handleButtonClick() {
+  ElMessageBox.alert('按钮被点击了！', '提示', {
+    confirmButtonText: '确定'
+  });
+}
+
+function handleMouseOver() {
+  console.log('鼠标悬停在按钮上');
+}
+
+function handleMouseLeave() {
+  console.log('鼠标离开按钮');
 }
 </script>
 

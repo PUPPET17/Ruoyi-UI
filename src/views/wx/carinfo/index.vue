@@ -16,7 +16,7 @@
               <plate-input v-model="form.plateNumber"></plate-input>
             </el-form-item> -->
             <el-form-item label="车牌号" prop="plateNumber">
-              <el-input v-model="form.plateNumber" placeholder="请输入车牌号" show-word-limit maxlength="8"/>
+              <el-input v-model="form.plateNumber" placeholder="请输入车牌号" show-word-limit maxlength="8" />
             </el-form-item>
           </el-col>
 
@@ -173,12 +173,15 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
       </div>
     </div>
+    <el-dialog v-if="dialogVisible" title="操作成功" @close="dialogVisible = false">
+    
+    </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, toRefs } from 'vue';
-import { addOffSiteVehicleNoAuth } from "@/api/wx/offSite";
+import { addOffSiteVehicleNoAuth,openGate } from "@/api/wx/offSite";
 // import { addOffSiteVehicleNoAuth } from "@/api/system/OffSiteVehicle";
 import { useRoute, useRouter } from 'vue-router';
 
@@ -234,6 +237,7 @@ const data = reactive({
     emissionStage: [{ required: true, message: '排放标准不能为空', trigger: 'blur' }],
     brandModel: [{ required: true, message: '品牌型号不能为空', trigger: 'blur' }],
     registrationDate: [{ required: true, message: '注册日期不能为空', trigger: 'blur' }],
+    certDate: [{ required: true, message: '发证日期不能为空', trigger: 'blur' }],
     plateColor: [{ required: true, message: '车牌颜色不能为空', trigger: 'blur' }],
     usageProperty: [{ required: true, message: '使用性质不能为空', trigger: 'blur' }],
     engineNumber: [{ required: true, message: '发动机号不能为空', trigger: 'blur' }],
@@ -250,6 +254,8 @@ const data = reactive({
 });
 
 const { form, rules } = toRefs(data);
+
+const dialogVisible = ref(false); // 控制对话框的显隐
 
 // 表单重置
 function reset() {
@@ -272,9 +278,16 @@ function submitForm() {
   proxy.$refs["OffSiteVehicleRef"].validate(valid => {
     if (valid) {
       addOffSiteVehicleNoAuth(form.value).then(response => {
+        console.log("返回的数据:", response);
         // 判断返回的状态，如果不是200则显示错误信息
-        if (response.status === 200) {
+        if (response.code === 200) {
           ElMessage.success("新增成功");
+          console.log("121321"+dialogVisible.value)
+          dialogVisible.value = true; // 显示对话框
+          console.log("121321"+dialogVisible.value)
+          nextTick(() => {
+            console.log("对话框应该显示了");
+          });
           // reset(); // 提交后重置表单
         } else {
           // 如果接口返回非200状态，显示错误信息
@@ -288,11 +301,23 @@ function submitForm() {
   });
 }
 
+function openTheGate() {
+  openGate(route.query.aid, form.value.plateNumber).then(response => {
+    if (response.status === 200) {
+      ElMessage.success("操作成功");
+    } else {
+      ElMessage.error(response.msg || "操作失败");
+    }
+  }).catch(error => {
+    ElMessage.error(error.message || "请求失败，请稍后重试");
+  })
+  // dialogVisible.value = false; // 关闭对话框
+}
 
 onMounted(() => {
   document.body.addEventListener('touchstart', disableDoubleTapZoom, { passive: false });
   const ocrData = route.query.ocrData;
-  const aid =  route.query.aid;
+  const aid = route.query.aid;
   if (ocrData) {
     try {
       const parsedData = JSON.parse(ocrData);
@@ -306,7 +331,7 @@ onMounted(() => {
       form.value.brandModel = parsedData.vehicleBrandType || null;
       form.value.registrationDate = parsedData.vehicleLicenseDateStart ? formatDate(parsedData.vehicleLicenseDateStart) : null;
       form.value.certDate = parsedData.vehicleLicenseFirstDate ? formatDate(parsedData.vehicleLicenseFirstDate) : null;
-      form.value.plateColor = null; 
+      form.value.plateColor = null;
       form.value.usageProperty = parsedData.vehicleUse || null;
       form.value.engineNumber = parsedData.vehicleEngineId || null;
       form.value.ownerName = parsedData.vehicleLicenseOwner || null;

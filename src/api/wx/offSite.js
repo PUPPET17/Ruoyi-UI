@@ -11,3 +11,18 @@ export function addOffSiteVehicleNoAuth(data) {
     }
   })
 }
+
+//开闸消息
+export function openGate(companyId,plateNo) {
+  return request({
+    url: '/wx/vehicle/openGate',
+    method: 'get',
+    headers: {
+      skipAuth: true
+    },
+    params: {
+      companyId: companyId,
+      plateNo: plateNo
+    }
+  })
+}
