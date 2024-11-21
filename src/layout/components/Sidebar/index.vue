@@ -43,3 +43,31 @@ const activeMenu = computed(() => {
 })
 
 </script>
+
+<style scoped>
+/* 修改侧边栏背景颜色 */
+.has-logo {
+  background-color: #f0f0f0; /* 示例颜色 */
+}
+
+/* 修改菜单项的文本颜色 */
+.el-menu {
+  .el-menu-item {
+    color: #333; /* 示例颜色 */
+  }
+}
+
+/* 修改滚动条样式 */
+.scrollbar-wrapper {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: #888; /* 示例颜色 */
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* 示例颜色 */
+  }
+}
+</style>

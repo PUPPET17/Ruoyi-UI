@@ -70,7 +70,7 @@
 
         <el-col :span="6">
           <el-form-item label="相机名" prop="cameraName">
-            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="right" popper-class="fade">
+            <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="bottom" popper-class="fade">
               <el-input v-model="queryParams.cameraName" placeholder="请输入相机名" clearable @keyup.enter="handleQuery">
                 <template #prefix>
                   <el-icon class="el-input__icon">

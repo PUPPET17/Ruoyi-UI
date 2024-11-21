@@ -225,8 +225,8 @@ const data = reactive({
   rules: {
     companyId: [{ required: true, message: '公司id不能为空', trigger: 'blur' }],
     plateNumber: [
-      { required: true, message: '传统车牌号7个字符，新能源车8个字符', trigger: 'blur' },
-      { min: 7, max: 8, message: '传统车牌号7个字符，新能源车8个字符', trigger: 'blur' }
+      { required: true, message: '传统车牌7个字符，新能源车8个字符', trigger: 'blur' },
+      { min: 7, max: 8, message: '传统车牌7个字符，新能源车8个字符', trigger: 'blur' }
     ],
     vin: [
       { required: true, message: 'VIN不能为空', trigger: 'blur' },
@@ -366,32 +366,39 @@ const disableDoubleTapZoom = (e) => {
 
 <style scoped>
 .app-container {
-  padding: 16px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* 增加内边距 */
+  background-color: #f0f2f5; /* 更柔和的背景色 */
+  border-radius: 10px; /* 更圆滑的边角 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* 更柔和的阴影 */
 }
 
 .form-container {
-  background-color: #fff;
-  padding: 16px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  padding: 20px; /* 增加内边距 */
+  border-radius: 10px; /* 更圆滑的边角 */
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* 更柔和的阴影 */
 }
 
 .el-form-item {
-  margin-bottom: 16px;
+  margin-bottom: 20px; /* 增加间距 */
 }
 
 .el-input,
 .el-select {
-  border-radius: 4px;
-  height: 40px;
+  border-radius: 5px; /* 更圆滑的边角 */
+  height: 42px; /* 增加高度 */
+  transition: border-color 0.3s; /* 添加过渡效果 */
+}
+
+.el-input:focus,
+.el-select:focus {
+  border-color: #409EFF; /* 聚焦时的边框颜色 */
 }
 
 .el-button {
   width: 100%;
-  margin-top: 10px;
+  margin-top: 15px; /* 增加间距 */
+  transition: background-color 0.3s, border-color 0.3s; /* 添加过渡效果 */
 }
 
 .el-button.type-primary {
@@ -404,6 +411,6 @@ const disableDoubleTapZoom = (e) => {
 }
 
 .el-button:hover {
-  background-color: #e0e0e0;
+  background-color: #e6e6e6; /* 更柔和的悬停颜色 */
 }
 </style>
