@@ -85,7 +85,7 @@
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" />
+      @pagination="getList" hide-on-single-page />
 
     <!-- 添加或修改企业详细配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>

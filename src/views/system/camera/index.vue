@@ -176,7 +176,7 @@
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize" @pagination="getList" />
+      v-model:limit="queryParams.pageSize" @pagination="getList" hide-on-single-page/>
 
     <!-- 添加或修改相机管理对话框 -->
     <el-dialog :title="title" v-model="open" width="800px" append-to-body>

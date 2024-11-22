@@ -26,18 +26,19 @@
           </el-form-item>
         </el-col>
         <el-col :span="12" />
-        <el-col :span="4">
-          <el-form-item label="入场日期" prop="startDate">
-            <el-date-picker clearable v-model="queryParams.startDate" type="date" value-format="YYYY-MM-DD"
-              placeholder="请选择入场日期" style="width: 100%;" />
+        <el-col :span="8">
+          <el-form-item label="创建时间" prop="dateRange">
+            <el-date-picker v-model="dateRange" type="datetimerange" range-separator="至" start-placeholder="开始日期"
+              end-placeholder="结束日期" value-format="YYYY-MM-DD HH:mm:ss" style="width: 100%;"
+              @change="handleDateRangeChange" />
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <!-- <el-col :span="8">
           <el-form-item label="出场日期" prop="endDate">
             <el-date-picker clearable v-model="queryParams.endDate" type="date" value-format="YYYY-MM-DD"
               placeholder="请选择出场日期" style="width: 100%;" />
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="16" />
         <el-col :span="5">
           <el-form-item label="车辆类型" prop="classifyTitle" style="margin-bottom: 18px;">
@@ -55,6 +56,20 @@
             </div>
           </el-form-item>
         </el-col>
+        <!-- <el-col :span="6">
+          <el-form-item label="入场认证状态" prop="inboundCertStatus" label-width="100px">
+            <el-select v-model="queryParams.inboundCertStatus" placeholder="请选择入场认证状态" style="width: 180px;">
+              <el-option v-for="item in certified" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="出场认证状态" prop="outboundCertStatus" label-width="100px">
+            <el-select v-model="queryParams.outboundCertStatus" placeholder="请选择出场认证状态" style="width: 180px;">
+              <el-option v-for="item in certified" :key="item.value" :label="item.label" :value="item.value" />
+            </el-select>
+          </el-form-item>
+        </el-col> -->
         <el-col :span="24" style="text-align: left;margin-bottom: 20px;">
           <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
           <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -78,8 +93,7 @@
         <el-button type="warning" plain icon="Download" @click="handleExport">导出</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="warning" plain icon="Refresh" :disabled="multiple"
-          @click="handleReAuth">重新上传记录</el-button>
+        <el-button type="warning" plain icon="Refresh" :disabled="multiple" @click="handleReAuth">重新上传记录</el-button>
       </el-col>
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
     </el-row>
@@ -197,7 +211,7 @@
     </el-table>
 
     <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize" @pagination="getList" />
+      v-model:limit="queryParams.pageSize" @pagination="getList" hide-on-single-page/>
 
     <!-- 添加或修改通行记录对话框 -->
     <!-- <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -261,7 +275,7 @@
             placeholder="请选择入场日期">
           </el-date-picker>
         </el-form-item>
-        <el-form-item label="入场货物名称" prop="inboundName">
+        <el-form-item label="入场货名称" prop="inboundName">
           <el-input v-model="form.inboundName" placeholder="请输入入场货物名称" />
         </el-form-item>
         <el-form-item label="入场货物质量" prop="inboundVolume">
@@ -316,53 +330,20 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const dateRange = ref([]);
 
 const data = reactive({
   form: {},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    createDate: null,
-    areaName: null,
-    companyId: null,
+    startTime: null,
+    endTime: null,
     plateNo: null,
-    carSize: null,
-    carType: null,
-    cashierID: null,
-    classifyTitle: null,
-    plateColor: null,
-    plateColorType: null,
-    cost: null,
-    inImg: null,
-    inSmallImg: null,
-    outSmallImg: null,
-    outImg: null,
-    paidFee: null,
-    parkingType: null,
-    state: null,
-    inboundAccess: null,
-    outboundAccess: null,
-    statisticsId: null,
-    stopTime: null,
-    tel: null,
-    userName: null,
-    cameraSn: null,
-    cameraId: null,
-    cameraName: null,
-    startDate: null,
-    inboundName: null,
-    inboundVolume: null,
-    inboundUnit: null,
-    endDate: null,
-    outboundName: null,
-    outboundVolume: null,
-    outboundUnit: null,
     goodsOrigin: null,
-    isInboundAutoEntry: null,
-    isOutboundAutoEntry: null,
-    inboundCertStatus: null,
-    outboundCertStatus: null,
-    certMessage: null
+    goodsDestination: null,
+    classifyTitle: null,
+    state: null
   },
   rules: {
   },
@@ -404,15 +385,15 @@ const { queryParams, form, rules, columns } = toRefs(data);
 /** 查询通行记录列表 */
 function getList() {
   loading.value = true;
+  console.info("查询参数queryParams: " + JSON.stringify(queryParams.value));
   listRecord(queryParams.value).then(response => {
     // 将主键 ID 转换为字符串
     recordList.value = response.rows.map(item => ({
       ...item,
       state: item.state.toString(),
-      id: item.id.toString() // 确保 ID 是字符串
+      id: item.id.toString()
     }));
-    console.error(recordList.value);
-    localStorage.setItem("recordList", JSON.stringify(recordList.value));
+    console.info(recordList.value);
     total.value = response.total;
     loading.value = false;
   });
@@ -481,6 +462,7 @@ function handleQuery() {
 
 /** 重置按钮操作 */
 function resetQuery() {
+  dateRange.value = [];
   proxy.resetForm("queryRef");
   handleQuery();
 }
@@ -488,7 +470,6 @@ function resetQuery() {
 // 多选框选中数据
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.id);
-  localStorage.setItem("recordListsss", JSON.stringify(selection));
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -561,6 +542,17 @@ function handleExport() {
   proxy.download('transit/record/export', {
     ...queryParams.value
   }, `record_${new Date().getTime()}.xlsx`)
+}
+
+// 处理日期范围变化
+function handleDateRangeChange(val) {
+  if (val) {
+    queryParams.value.startTime = val[0];
+    queryParams.value.endTime = val[1];
+  } else {
+    queryParams.value.startTime = null;
+    queryParams.value.endTime = null;
+  }
 }
 
 getList();

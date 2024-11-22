@@ -8,10 +8,10 @@
     <div class="right-menu">
       <template v-if="appStore.device !== 'mobile'">
 
-        <el-button class="right-menu-item hover-effect" @click="handleButtonClick" @mouseover="handleMouseOver"
+        <!-- <el-button class="right-menu-item hover-effect" @click="handleButtonClick" @mouseover="handleMouseOver"
           @mouseleave="handleMouseLeave">
           点击我
-        </el-button>
+        </el-button> -->
 
         <header-search id="header-search" class="right-menu-item" />
 
