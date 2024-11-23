@@ -1,36 +1,66 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="是否自动开闸" prop="isAutoOpen">
-        <el-select v-model="queryParams.isAutoOpen" placeholder="请选择是否自动开闸" clearable>
-          <el-option v-for="dict in is_auto_open" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否录入车辆" prop="isRegis">
-        <el-select v-model="queryParams.isRegis" placeholder="请选择是否录入车辆" clearable>
-          <el-option v-for="dict in is_regis" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="禁行排放等级" prop="emissionState">
-        <el-select v-model="queryParams.emissionState" placeholder="请选择禁行排放等级" clearable>
-          <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="动态二维码过期时间" prop="qrExpireTime">
-        <el-input v-model="queryParams.qrExpireTime" placeholder="请输入动态二维码过期时间" clearable @keyup.enter="handleQuery" />
-      </el-form-item>
-      <el-form-item label="违规记录上报" prop="violationAutoReport">
-        <el-select v-model="queryParams.violationAutoReport" placeholder="请选择违规记录上报" clearable>
-          <el-option v-for="dict in sys_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-        <el-button icon="Refresh" @click="resetQuery">重置</el-button>
-      </el-form-item>
+    <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="120px">
+      <el-row :gutter="20">
+        <el-col :span="5">
+          <el-form-item label="是否自动开闸" prop="isAutoOpen">
+            <el-select v-model="queryParams.isAutoOpen" placeholder="请选择是否自动开闸" clearable style="width: 180px;">
+              <el-option v-for="dict in is_auto_open" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="是否录入车辆" prop="isRegis">
+            <el-select v-model="queryParams.isRegis" placeholder="请选择是否录入车辆" clearable style="width: 180px;">
+              <el-option v-for="dict in is_regis" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="禁行排放等级" prop="emissionState">
+            <el-select v-model="queryParams.emissionState" placeholder="请选择禁行排放等级" clearable style="width: 180px;">
+              <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="二维码过期时间" prop="qrExpireTime">
+            <el-input v-model="queryParams.qrExpireTime" placeholder="请输入过期时间" clearable @keyup.enter="handleQuery"
+              style="width: 180px;" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="违规记录上报" prop="violationAutoReport">
+            <el-select v-model="queryParams.violationAutoReport" placeholder="请选择违规记录上报" clearable
+              style="width: 180px;">
+              <el-option v-for="dict in int_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="违规报警" prop="violationAlarm">
+            <el-select v-model="queryParams.violationAlarm" placeholder="请选择违规报警" clearable style="width: 180px;">
+              <el-option v-for="dict in int_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="是否接入接口平台" prop="isOnline">
+            <el-select v-model="queryParams.isOnline" placeholder="请选择是否接入接口平台" clearable style="width: 180px;">
+              <el-option v-for="dict in int_yes_no" :key="dict.value" :label="dict.label" :value="dict.value" />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item>
+            <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
+            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="20" class="mb8">
       <el-col :span="1.5">
         <el-button type="primary" plain icon="Plus" @click="handleAdd"
           v-hasPermi="['system:enterpriseConfig:add']">新增</el-button>
@@ -50,72 +80,177 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="enterpriseConfigList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column label="主键id" align="center" prop="id" /> -->
-      <el-table-column label="是否自动开闸" align="center" prop="isAutoOpen">
-        <template #default="scope">
-          <dict-tag :options="is_auto_open" :value="scope.row.isAutoOpen" />
-        </template>
-      </el-table-column>
-      <el-table-column label="是否录入车辆" align="center" prop="isRegis">
-        <template #default="scope">
-          <dict-tag :options="is_regis" :value="scope.row.isRegis" />
-        </template>
-      </el-table-column>
-      <el-table-column label="禁行排放等级" align="center" prop="emissionState">
-        <template #default="scope">
-          <dict-tag :options="emission_state" :value="scope.row.emissionState" />
-        </template>
-      </el-table-column>
-      <el-table-column label="动态二维码过期时间" align="center" prop="qrExpireTime" />
-      <el-table-column label="违规记录上报" align="center" prop="violationAutoReport">
-        <template #default="scope">
-          <dict-tag :options="sys_yes_no" :value="scope.row.violationAutoReport" />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:enterpriseConfig:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)"
-            v-hasPermi="['system:enterpriseConfig:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-row :gutter="20">
+      <el-col v-for="item in enterpriseConfigList" :key="item.id" :span="8">
+        <el-card class="box-card" shadow="hover">
+          <template #header>
+            <div class="card-header">
+              <div class="header-left">
+                <el-icon>
+                  <Office />
+                </el-icon>
+                <span class="title">{{ getCompanyName(item.companyId) }}</span>
+              </div>
+              <el-button type="primary" :icon="Edit" link @click="handleUpdate(item)"
+                v-hasPermi="['system:enterpriseConfig:edit']">修改</el-button>
+            </div>
+          </template>
+          <div class="card-body">
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Unlock />
+                </el-icon>
+                是否自动开闸:
+              </span>
+              <dict-tag :options="is_auto_open" :value="item.isAutoOpen" />
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Van />
+                </el-icon>
+                是否录入车辆:
+              </span>
+              <dict-tag :options="is_regis" :value="item.isRegis" />
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Warning />
+                </el-icon>
+                禁行排放等级:
+              </span>
+              <dict-tag :options="emission_state" :value="item.emissionState" />
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Timer />
+                </el-icon>
+                二维码过期时间:
+              </span>
+              <span class="value">{{ item.qrExpireTime }} 秒</span>
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Bell />
+                </el-icon>
+                违规记录自动上传:
+              </span>
+              <dict-tag :options="is_auto_report" :value="item.violationAutoReport" />
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Bell />
+                </el-icon>
+                违规报警:
+              </span>
+              <dict-tag :options="int_yes_no" :value="item.violationAlarm" />
+            </div>
+            <div class="info-item">
+              <span class="label">
+                <el-icon>
+                  <Unlock />
+                </el-icon>
+                是否接入接口平台:
+              </span>
+              <dict-tag :options="int_yes_no" :value="item.isOnline" />
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize"
-      @pagination="getList" hide-on-single-page />
+    <pagination v-show="total > 0" :total="total" v-model:page="queryParams.pageNum"
+      v-model:limit="queryParams.pageSize" @pagination="getList" hide-on-single-page />
 
     <!-- 添加或修改企业详细配置对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
-      <el-form ref="enterpriseConfigRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="是否自动开闸" prop="isAutoOpen">
-          <el-radio-group v-model="form.isAutoOpen">
-            <el-radio v-for="dict in is_auto_open" :key="dict.value"
-              :label="parseInt(dict.value)">{{ dict.label }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="是否录入车辆" prop="isRegis">
-          <el-radio-group v-model="form.isRegis">
-            <el-radio v-for="dict in is_regis" :key="dict.value" :label="parseInt(dict.value)">{{ dict.label }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="禁行排放等级" prop="emissionState">
-          <el-select v-model="form.emissionState" placeholder="请选择禁行排放等级">
-            <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label"
-              :value="parseInt(dict.value)"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="动态二维码过期时间" prop="qrExpireTime">
-          <el-input v-model="form.qrExpireTime" placeholder="请输入动态二维码过期时间" />
-        </el-form-item>
-        <el-form-item label="违规记录上报" prop="violationAutoReport">
-          <el-radio-group v-model="form.violationAutoReport">
-            <el-radio v-for="dict in sys_yes_no" :key="dict.value"
-              :label="parseInt(dict.value)">{{ dict.label }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
+      <el-form ref="enterpriseConfigRef" :model="formData" :rules="rules" label-width="180px">
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item label="企业名称" prop="companyId">
+              <el-select v-model="formData.companyId" placeholder="请选择企业" clearable filterable>
+                <el-option v-for="item in enterpriseIds" :key="item.companyId" :label="item.companyName"
+                  :value="item.companyId" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="是否自动开闸" prop="isAutoOpen">
+              <el-radio-group v-model="formData.isAutoOpen">
+                <el-radio v-for="dict in is_auto_open" :key="dict.value" :label="parseInt(dict.value)">
+                  {{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="是否录入车辆" prop="isRegis">
+              <el-radio-group v-model="formData.isRegis">
+                <el-radio v-for="dict in is_regis" :key="dict.value" :label="parseInt(dict.value)">
+                  {{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="禁行排放等级" prop="emissionState">
+              <el-select v-model="formData.emissionState" placeholder="请选择禁行排放等级">
+                <el-option v-for="dict in emission_state" :key="dict.value" :label="dict.label"
+                  :value="parseInt(dict.value)" :disabled="[].includes(dict.value)" />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="动态二维码过期时间" prop="qrExpireTime" label-width="180">
+              <el-input-number v-model="formData.qrExpireTime" :min="30" :step="10" controls-position="right"
+                style="width: 180px" class="custom-input-number">
+                <template #prefix>
+                  <el-icon>
+                    <Timer />
+                  </el-icon>
+                </template>
+                <template #append>
+                  <span class="append-text">秒</span>
+                </template>
+              </el-input-number>
+              <div class="append-text" v-if="formData.qrExpireTime">
+                秒
+              </div>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="违规记录自动上报" prop="violationAutoReport">
+              <el-radio-group v-model="formData.violationAutoReport">
+                <el-radio v-for="dict in is_auto_report" :key="dict.value" :label="parseInt(dict.value)">
+                  {{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="违规报警" prop="violationAlarm">
+              <el-radio-group v-model="formData.violationAlarm">
+                <el-radio v-for="dict in int_yes_no" :key="dict.value" :label="parseInt(dict.value)">
+                  {{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="是否接入接口平台" prop="isOnline">
+              <el-radio-group v-model="formData.isOnline">
+                <el-radio v-for="dict in int_yes_no" :key="dict.value" :label="parseInt(dict.value)">
+                  {{ dict.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -129,9 +264,10 @@
 
 <script setup name="EnterpriseConfig">
 import { listEnterpriseConfig, getEnterpriseConfig, delEnterpriseConfig, addEnterpriseConfig, updateEnterpriseConfig } from "@/api/system/enterpriseConfig";
+import { selectIds } from "@/api/system/info";
 
 const { proxy } = getCurrentInstance();
-const { is_regis, sys_yes_no, is_auto_open, emission_state } = proxy.useDict('is_regis', 'sys_yes_no', 'is_auto_open', 'emission_state');
+const { is_regis, is_auto_report, is_auto_open, emission_state, int_yes_no } = proxy.useDict('is_regis', 'is_auto_report', 'is_auto_open', 'emission_state', 'int_yes_no');
 
 const enterpriseConfigList = ref([]);
 const open = ref(false);
@@ -143,8 +279,10 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 
+const enterpriseIds = ref([]);
+
 const data = reactive({
-  form: {},
+  formData: {},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
@@ -152,9 +290,13 @@ const data = reactive({
     isRegis: null,
     emissionState: null,
     qrExpireTime: null,
-    violationAutoReport: null
+    violationAutoReport: null,
+    violationAlarm: null
   },
   rules: {
+    companyId: [
+      { required: true, message: "企业名称不能为空", trigger: "change" }
+    ],
     isAutoOpen: [
       { required: true, message: "是否自动开闸不能为空", trigger: "change" }
     ],
@@ -169,11 +311,17 @@ const data = reactive({
     ],
     violationAutoReport: [
       { required: true, message: "违规记录上报不能为空", trigger: "change" }
+    ],
+    violationAlarm: [
+      { required: true, message: "违规报警不能为空", trigger: "change" }
+    ],
+    isOnline: [
+      { required: true, message: "请选择是否接入接口平台", trigger: "change" }
     ]
   }
 });
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, formData, rules } = toRefs(data);
 
 /** 查询企业详细配置列表 */
 function getList() {
@@ -193,14 +341,16 @@ function cancel() {
 
 // 表单重置
 function reset() {
-  form.value = {
+  formData.value = {
     id: null,
     companyId: null,
     isAutoOpen: null,
     isRegis: null,
     emissionState: null,
     qrExpireTime: null,
-    violationAutoReport: null
+    violationAutoReport: null,
+    violationAlarm: null,
+    isOnline: null
   };
   proxy.resetForm("enterpriseConfigRef");
 }
@@ -236,7 +386,7 @@ function handleUpdate(row) {
   reset();
   const _id = row.id || ids.value
   getEnterpriseConfig(_id).then(response => {
-    form.value = response.data;
+    formData.value = response.data;
     open.value = true;
     title.value = "修改企业详细配置";
   });
@@ -246,14 +396,14 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["enterpriseConfigRef"].validate(valid => {
     if (valid) {
-      if (form.value.id != null) {
-        updateEnterpriseConfig(form.value).then(response => {
+      if (formData.value.id != null) {
+        updateEnterpriseConfig(formData.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
           getList();
         });
       } else {
-        addEnterpriseConfig(form.value).then(response => {
+        addEnterpriseConfig(formData.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
@@ -281,5 +431,83 @@ function handleExport() {
   }, `enterpriseConfig_${new Date().getTime()}.xlsx`)
 }
 
+async function getEnterpriseList() {
+  try {
+    const response = await selectIds();
+    enterpriseIds.value = response.rows;
+    console.log(enterpriseIds.value);
+  } catch (error) {
+    console.log("获取企业列表失败", error);
+  }
+}
+
+getEnterpriseList();
 getList();
+
+const getCompanyName = (companyId) => {
+  const company = enterpriseIds.value.find(item => item.companyId === companyId);
+  return company ? company.companyName : '未知企业'; // 如果找不到，返回默认值
+};
 </script>
+
+<style scoped>
+.box-card {
+  margin-bottom: 10px;
+  transition: all 0.3s;
+}
+
+.box-card:hover {
+  box-shadow: 0 4px 12px rgba(85, 85, 85, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.header-left .el-icon {
+  margin-right: 8px;
+  color: var(--el-color-primary);
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.info-item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.info-item .label {
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.info-item .label .el-icon {
+  margin-right: 8px;
+  color: var(--el-color-primary);
+}
+
+.info-item :deep(.el-tag),
+.info-item .value {
+  margin-left: auto;
+}
+
+.custom-input-number :deep(.el-input__wrapper) {
+  box-shadow: 0 0 0 1px var(--el-border-color-lighter) inset;
+}
+</style>

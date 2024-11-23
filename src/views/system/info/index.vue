@@ -26,20 +26,6 @@
           </el-form-item>
         </el-col>
         <el-col :span="6" />
-        <!-- <el-col :span="8">
-          <el-form-item label="创建时间" prop="createDate">
-            <el-date-picker clearable v-model="queryParams.createDate" type="date" value-format="YYYY-MM-DD"
-              placeholder="请选择创建时间" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="8">
-          <el-form-item label="服务失效时间" prop="expireTime">
-            <el-date-picker clearable v-model="queryParams.expireTime" type="date" value-format="YYYY-MM-DD"
-              placeholder="请选择服务失效时间" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8" /> -->
         <el-col :span="6">
           <el-form-item label="联网状态" prop="isOnline" style="width: 100%; margin-bottom: 20px;">
             <div class="custom-style">
@@ -113,7 +99,6 @@
           <span>{{ parseTime(scope.row.createDate, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="企业编码" align="center" prop="identifier" /> -->
       <el-table-column label="联网状态" align="center" prop="isOnline">
         <template #default="scope">
           <dict-tag :options="is_online" :value="scope.row.isOnline" />
@@ -402,6 +387,7 @@ const data = reactive({
   qrcode: null,
   qrcodeDialogVisible: false,
   form: {},
+  configForm: {},
   queryParams: {
     pageNum: 1,
     pageSize: 10,
@@ -471,74 +457,39 @@ const platformConfig = reactive({
   }
 });
 
+// 校验单个平台的配置
+const validatePlatform = (platform, fields) => {
+  for (const [field, label] of fields) {
+    if (!platform[field]) {
+      proxy.$modal.msgError(`请输入${label}`);
+      return false;
+    }
+  }
+  return true;
+};
+
 // 校验接口平台配置信息
 const validatePlatformConfig = () => {
   const strategy = form.value.apiStrategy;
+  if (!strategy) return true;
 
-  switch (strategy) {
-    case 1: // 香河
-      if (!platformConfig.platform1.userName) {
-        proxy.$modal.msgError("请输入AppID");
-        return false;
-      }
-      if (!platformConfig.platform1.password) {
-        proxy.$modal.msgError("请输入AppSecret");
-        return false;
-      }
-      break;
+  const validations = {
+    1: [['userName', 'AppID'], ['password', 'AppSecret']],
+    2: [
+      ['username', '用户名'],
+      ['password', '密码'],
+      ['callerId', 'callerId'],
+      ['pukrsa', 'RSA公钥'],
+      ['prkrsa', 'RSA私钥'],
+      ['puksm2', 'SM2公钥'],
+      ['prksm2', 'SM2私钥'],
+      ['clientId', '客户端ID'],
+      ['clientSecret', '客户端密钥']
+    ],
+    3: [['username', '用户名'], ['password', '密码']]
+  };
 
-    case 2: // 唐山
-      if (!platformConfig.platform2.username) {
-        proxy.$modal.msgError("请输入用户名");
-        return false;
-      }
-      if (!platformConfig.platform2.password) {
-        proxy.$modal.msgError("请输入密码");
-        return false;
-      }
-      if (!platformConfig.platform2.callerId) {
-        proxy.$modal.msgError("请输入callerId");
-        return false;
-      }
-      if (!platformConfig.platform2.pukrsa) {
-        proxy.$modal.msgError("请输入RSA公钥");
-        return false;
-      }
-      if (!platformConfig.platform2.prkrsa) {
-        proxy.$modal.msgError("请输入RSA私钥");
-        return false;
-      }
-      if (!platformConfig.platform2.puksm2) {
-        proxy.$modal.msgError("请输入SM2公钥");
-        return false;
-      }
-      if (!platformConfig.platform2.prksm2) {
-        proxy.$modal.msgError("请输入SM2私钥");
-        return false;
-      }
-      if (!platformConfig.platform2.clientId) {
-        proxy.$modal.msgError("请输入客户端ID");
-        return false;
-      }
-      if (!platformConfig.platform2.clientSecret) {
-        proxy.$modal.msgError("请输入客户端密钥");
-        return false;
-      }
-      break;
-
-    case 3: // 三门峡
-      if (!platformConfig.platform3.username) {
-        proxy.$modal.msgError("请输入用户名");
-        return false;
-      }
-      if (!platformConfig.platform3.password) {
-        proxy.$modal.msgError("请输入密码");
-        return false;
-      }
-      break;
-  }
-
-  return true;
+  return validatePlatform(platformConfig[`platform${strategy}`], validations[strategy]);
 };
 
 /** 查询企业信息列表 */
@@ -617,7 +568,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添加企业信息";
+  title.value = "添��企业信息";
 }
 
 async function handleUpdate(row) {
@@ -824,6 +775,7 @@ getList();
 .qrcode-dialog .el-dialog {
   border-radius: 8px;
   overflow: hidden;
+  margin-top: 0 !important;
 }
 
 .qrcode-dialog .el-dialog__header {
@@ -852,7 +804,8 @@ getList();
   border-radius: 4px;
 }
 
-.qrcode-container img {
+.qrcode-container img,
+.qrcode-image {
   width: 310px;
   height: 310px;
   object-fit: contain;
@@ -1046,12 +999,12 @@ getList();
 @keyframes dialogSlideOut {
   from {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateY(0);
   }
 
   to {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.95) translateY(20px);
   }
 }
 
@@ -1149,7 +1102,6 @@ getList();
   }
 }
 
-/* 添加一些过渡效果 */
 .el-divider {
   margin: 24px 0 16px;
 }
@@ -1158,8 +1110,7 @@ getList();
   transition: all 0.3s ease-in-out;
 }
 
-/* 可以添加一些输入框的样式 */
-.el-input.is-password>>>.el-input__inner {
+.el-input.is-password :deep(.el-input__inner) {
   letter-spacing: 1px;
 }
 </style>
