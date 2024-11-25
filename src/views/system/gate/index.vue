@@ -21,7 +21,7 @@
           <el-form-item label="认证状态" prop="isValid">
             <div class="custom-style">
               <el-segmented v-model="queryParams.isValid"
-                :options="certified.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                :options="certified.map(dict => ({ label: dict.label, value: dict.value }))" size="small" />
             </div>
           </el-form-item>
         </el-col>
@@ -111,7 +111,7 @@
             <el-form-item label="出入口编号" prop="entranceNo" style="width: 100%; margin-bottom: 20px;">
               <div class="custom-style">
                 <el-segmented v-model="form.entranceNo"
-                  :options="entrance_no.map(dict => ({ label: dict.label, value: dict.value }))" size="middle" />
+                  :options="entrance_no.map(dict => ({ label: dict.label, value: dict.value }))" size="small" />
               </div>
             </el-form-item>
           </el-col>

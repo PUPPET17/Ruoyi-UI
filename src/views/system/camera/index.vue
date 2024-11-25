@@ -54,20 +54,6 @@
           </el-form-item>
         </el-col>
 
-        <!-- <el-col :span="4">
-          <el-form-item label="创建时间" prop="createdDate">
-            <el-date-picker clearable v-model="queryParams.createdDate" type="date" value-format="YYYY-MM-DD"
-              placeholder="请选择创建时间" />
-          </el-form-item>
-        </el-col>
-
-        <el-col :span="4">
-          <el-form-item label="更新时间" prop="updatedDate">
-            <el-date-picker clearable v-model="queryParams.updatedDate" type="date" value-format="YYYY-MM-DD"
-              placeholder="请选择更新时间" />
-          </el-form-item>
-        </el-col> -->
-
         <el-col :span="6">
           <el-form-item label="相机名" prop="cameraName">
             <el-tooltip class="item" effect="light" content="支持模糊搜索" placement="bottom" popper-class="fade">
@@ -161,7 +147,7 @@
           <span>{{ parseTime(scope.row.updatedDate, '{y}-{m}-{d} {h}:{m}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="接口平台信息" align="center" prop="message" show-overflow-tooltip />
+      <el-table-column label="接口平信息" align="center" prop="message" show-overflow-tooltip />
       <el-table-column label="视频播放路径" align="center" prop="vedioSrc" show-overflow-tooltip />
       <el-table-column label="视频回放路径" align="center" prop="vedioReplay" show-overflow-tooltip />
 
@@ -281,13 +267,6 @@
               </div>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="出入口标识" prop="entranceFlag" >
-              <el-radio-group v-model="form.entranceFlag">
-                <el-radio v-for="dict in gate_type" :key="dict.value" :label="dict.value">{{ dict.label }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col> -->
           <el-col :span="12">
             <el-form-item label="道闸类型" prop="gateType" label-width="auto">
               <div class="custom-style">
@@ -415,7 +394,7 @@ const data = reactive({
     ],
     ip: [
       { required: true, message: 'IP地址不能为空', trigger: 'blur' },
-      { pattern: /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){2}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/, message: '请输入合法的IP地址', trigger: 'blur' }
+      { pattern: /^(?:\d{1,3}\.){3}\d{1,3}$/, message: '请输入合法的IP地址', trigger: 'blur' }
     ],
     port: [
       { required: true, message: '端口号不能为空', trigger: 'blur' },

@@ -53,14 +53,6 @@
                   <el-button type="danger" plain icon="Delete" :disabled="multiple" @click="handleDelete"
                      v-hasPermi="['system:user:remove']">删除</el-button>
                </el-col>
-               <!-- <el-col :span="1.5">
-                  <el-button type="info" plain icon="Upload" @click="handleImport"
-                     v-hasPermi="['system:user:import']">导入</el-button>
-               </el-col> -->
-               <!-- <el-col :span="1.5">
-                  <el-button type="warning" plain icon="Download" @click="handleExport"
-                     v-hasPermi="['system:user:export']">导出</el-button>
-               </el-col> -->
                <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
             </el-row>
 
@@ -73,8 +65,6 @@
                   :show-overflow-tooltip="true" />
                <el-table-column label="部门" align="center" key="deptName" prop="dept.deptName" v-if="columns[3].visible"
                   :show-overflow-tooltip="true" />
-               <!-- <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber"
-                  v-if="columns[4].visible" width="120" /> -->
                <el-table-column label="状态" align="center" key="status" v-if="columns[5].visible">
                   <template #default="scope">
                      <el-switch v-model="scope.row.status" active-value="0" inactive-value="1"
@@ -155,9 +145,10 @@
                      </el-select>
                   </el-form-item>
                </el-col>
-               <el-col :span="24">
+               <el-col :span="24" v-if="!isBusinessRole">
                   <el-form-item label="待绑定的企业" prop="companyId" label-width="140px">
-                     <el-select v-model="form.companyId" placeholder="请选择希望绑定的企业" clearable filterable>
+                     <el-select v-model="form.companyId" placeholder="请选择希望绑定的企业" clearable filterable
+                        :disabled="isBusinessRole">
                         <el-option v-for="item in enterpriseIds" :key="item.companyId" :label="item.companyName"
                            :value="item.companyId" />
                      </el-select>
@@ -246,7 +237,7 @@ const data = reactive({
       nickName: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
       password: [{ required: true, message: "用户密码不能为空", trigger: "blur" }, { min: 5, max: 20, message: "用户密码长度必须介于 5 和 20 之间", trigger: "blur" }, { pattern: /^[^<>"'|\\]+$/, message: "不能包含非法字符：< > \" ' \\\ |", trigger: "blur" }],
       email: [{ type: "email", message: "请输入正确的邮箱地址", trigger: ["blur", "change"] }],
-      phonenumber: [{ pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }],
+      phonenumber: [{ pattern: /^1[3-9]\d\d{8}$/, message: "请输入正确的手机号码", trigger: "blur" }],
       deptId: [{ required: true, message: "部门不能为空", trigger: "blur" }],
       // roleId: [{ required: true, message: "角色不能为空", trigger: "blur" }],
       roleIds: [{ required: true, message: "角色不能为空", trigger: "change" }],
@@ -255,6 +246,21 @@ const data = reactive({
 });
 
 const { queryParams, form, rules } = toRefs(data);
+
+// 添加计算属性判断是否为业务员角色
+const isBusinessRole = computed(() => {
+   return form.value.roleIds && form.value.roleIds.includes(2); // 2为业务员角色ID
+});
+
+// 修改 watch 逻辑
+watch(() => form.value.roleIds, (newRoles) => {
+  if (newRoles && newRoles.includes(2)) {
+    data.rules.companyId = [];  // 清除必填验证
+    form.value.companyId = ''; // 清空已选择的企业
+  } else {
+    data.rules.companyId = [{ required: true, message: "企业不能为空", trigger: "change" }];
+  }
+}, { deep: true });
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {
@@ -271,6 +277,7 @@ watch(deptName, val => {
 function getDeptTree() {
    deptTreeSelect().then(response => {
       deptOptions.value = response.data;
+      console.log("deptOptions.value:",deptOptions.value);
    });
 };
 
@@ -460,9 +467,19 @@ function handleUpdate(row) {
       roleOptions.value = response.roles;
       form.value.postIds = response.postIds;
       form.value.roleIds = response.roleIds;
+      
+      // 立即检查是否为业务员角色并更新验证规则
+      if (response.roleIds && response.roleIds.includes(2)) {
+         data.rules.companyId = [];  // 清除必填验证
+         form.value.companyId = ''; // 清空企业值
+      } else {
+         data.rules.companyId = [{ required: true, message: "企业不能为空", trigger: "change" }];
+      }
+      
       open.value = true;
       title.value = "修改用户";
       form.password = "";
+      form.companyId = "";
    });
 };
 
@@ -483,14 +500,16 @@ function submitForm() {
                getList();
             });
          }
-         const data = { 
-            companyId: form.value.companyId,
-            userId: form.value.userId,
-            deptId: form.value.deptId
-          }
-         updateInfo(data).then(response => {
-            proxy.$modal.msgSuccess("企业绑定成功");
-         })
+         if (!form.value.roleIds.includes(2)) { 
+            const data = { 
+               companyId: form.value.companyId,
+               userId: form.value.userId,
+               deptId: form.value.deptId
+            }
+            updateInfo(data).then(response => {
+               proxy.$modal.msgSuccess("企业绑定成功");
+            })
+         }
       }
    });
 };
@@ -499,7 +518,7 @@ async function getEnterpriseList() {
   try {
     const response = await selectIds();
     enterpriseIds.value = response.rows;
-    console.log(enterpriseIds.value);
+   //  console.log("enterpriseIds.value:",enterpriseIds.value);
   } catch (error) {
     console.log("获取企业列表失败", error);
   }

@@ -368,8 +368,7 @@
 
 <script setup name="Info">
 import { listInfo, getInfo, delInfo, addInfo, updateInfo, getStaticQrCode, getAPIConfig, addApi } from "@/api/system/info";
-import { ref, reactive, toRefs } from 'vue';
-import { getCurrentInstance } from 'vue';
+
 const { proxy } = getCurrentInstance();
 const { api_strategy, is_online, is_regis, is_auto_open, emission_state } = proxy.useDict('api_strategy', 'is_online', 'is_regis', 'is_auto_open', 'emission_state');
 
@@ -568,7 +567,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
-  title.value = "添��企业信息";
+  title.value = "添企业信息";
 }
 
 async function handleUpdate(row) {
@@ -716,7 +715,7 @@ const getPlatformTitle = (strategy) => {
 const handleStrategyChange = (value) => {
   // 清空当前平台的配置
   if (value) {
-    const currentPlatform = `platform${value}`;
+    // const currentPlatform = `platform${value}`;
     // 先不清空原配置
     // Object.keys(platformConfig[currentPlatform]).forEach(key => {
     //   platformConfig[currentPlatform][key] = '';
@@ -773,9 +772,9 @@ getList();
 }
 
 .qrcode-dialog .el-dialog {
+  margin-top: 0 !important;
   border-radius: 8px;
   overflow: hidden;
-  margin-top: 0 !important;
 }
 
 .qrcode-dialog .el-dialog__header {
@@ -800,8 +799,6 @@ getList();
   justify-content: center;
   align-items: center;
   padding: 20px;
-  background-color: white;
-  border-radius: 4px;
 }
 
 .qrcode-container img,
@@ -819,19 +816,6 @@ getList();
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.qrcode-dialog .el-dialog {
-  margin-top: 0 !important;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.qrcode-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
 }
 
 .qrcode-container img {
@@ -1084,10 +1068,6 @@ getList();
 
 .download-button i {
   font-size: 16px;
-}
-
-.qrcode-image {
-  margin-bottom: 0;
 }
 
 @keyframes fadeInUp {
